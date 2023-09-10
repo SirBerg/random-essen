@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -5,7 +9,6 @@
   --vibrant-pink: #d703e5;
   --vibrant-blue: #0332eb;
   --dark-button-color: white;
-  --input-border-color: black;
   .inverted-bg{
     background-color: rgb(214, 219, 220);
     color: black
@@ -20,14 +23,26 @@
     --vibrant-pink: #d703e5;
     --vibrant-blue: #0332eb;
     --dark-button-color: black;
-    --input-border-color: gray;
   }
   .inverted-bg{
     background-color: rgb(214, 219, 220);
     color: black
   }
 }
-
+@media (prefers-color-scheme: no-preference) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+    --vibrant-pink: #d703e5;
+    --vibrant-blue: #0332eb;
+    --dark-button-color: black;
+  }
+  .inverted-bg{
+    background-color: rgb(214, 219, 220);
+    color: black
+  }
+}
 
 .header{
   width:100%;
@@ -47,29 +62,6 @@
   min-height: 700px;
 }
 
-.search-bar-border{
-  border-color: var(--input-border-color)
-}
-
-.search-result{
-  background-color: white;
-  max-width: 280px;
-  width: 100%;
-  position: absolute;
-  border-radius: 5px;
-  border-width: 1px;
-  border-color:gray;
-  color: black;
-  padding: 10px;
-  margin-top: 10px
-}
-
-.search-result-description{
-  color: gray;
-  font-size: 13px;
-  margin-top: -7px
-}
-
 .signInButton{
   background-color: #d703e5;
   border-radius: 5px;
@@ -78,22 +70,6 @@
   padding-left: 7px;
   padding-right: 7px;
   color: var(--dark-button-color)
-}
-
-.body {
-  font-family: 'Atkinson', sans-serif;
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-end-rgb));
-
-  /*
-  background: linear-gradient(
-          to bottom,
-          transparent,
-          rgb(var(--background-end-rgb))
-  )
-  rgb(var(--background-start-rgb));*/
-  height: 100vh;
-  min-height: 729px;
 }
 
 @font-face {
@@ -116,9 +92,23 @@ main {
   max-width: calc(100% - 2em);
   margin: auto;
   padding: 3em 1em;
-  height: auto !important;
+  height:auto !important;
 }
-
+body {
+  font-family: 'Atkinson', sans-serif;
+  color: rgb(var(--foreground-rgb));
+  /*
+  background: linear-gradient(
+          to bottom,
+          transparent,
+          rgb(var(--background-end-rgb))
+  )
+  rgb(var(--background-start-rgb));
+   */
+  background-color: black;
+  height: 100vh;
+  min-height: 729px;
+}
 
 h6 {
   margin: 0 0 0.5rem 0;
