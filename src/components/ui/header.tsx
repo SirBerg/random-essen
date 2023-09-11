@@ -13,7 +13,6 @@ import {
 } from "@clerk/nextjs";
 
 export default function Header(){
-
     return(
         <div>
             <Grid className="header" templateColumns="repeat(3, 1fr)" gap={6}>

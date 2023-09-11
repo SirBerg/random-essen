@@ -24,14 +24,23 @@ import Link from "next/link";
 
 export default function SearchBar(){
     const [searchResult, setSearchResult] = useState(<></>)
+    useEffect(() => {
 
+        //remove search results when clicking outside of them
+        document.addEventListener('click', e=>{
+            const clickedOnElement:Element | null = document.elementFromPoint(e.clientX, e.clientY)
+            if(!clickedOnElement || clickedOnElement && !clickedOnElement.id.includes('result')){
+                setSearchResult(<></>)
+            }
+        }, {passive: true})
+    }, []);
     const handleInput = (e:FormEvent<HTMLInputElement>) => {
         console.log(e.target.width)
         setSearchResult(
-            <Center width="100vw" position="absolute" left="0" top="86px">
-                <Box className="search-result">
+            <Center width="100vw" position="absolute" left="0" top="86px" id="result-center">
+                <Box className="search-result" id="result-box">
                     <Stack>
-                        <Link href="/hello-world"><b>Hello World!</b></Link>
+                        <b>Hello World!</b>
                         <Box className="search-result-description">Hello</Box>
                     </Stack>
                 </Box>

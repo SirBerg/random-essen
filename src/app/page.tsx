@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import {Center, Stack} from "@chakra-ui/react";
 import HomepageButton from "@/components/ui/button";
+import Link from 'next/link'
 export default function Home() {
   return (
     <Center h="80vh">
@@ -11,7 +12,9 @@ export default function Home() {
             <Center>
                 <Stack direction="row">
                     <HomepageButton>
-                        Add a Meal
+                        <Link href="/app">
+                            Add a Meal
+                        </Link>
                     </HomepageButton>
                     <HomepageButton>
                         Randomize
