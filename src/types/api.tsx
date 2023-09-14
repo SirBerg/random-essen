@@ -1,3 +1,3 @@
-export namespace apiTypes {
+export type ingredient {
 
 }

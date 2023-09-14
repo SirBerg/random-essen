@@ -1,3 +1,5 @@
+import {ingredient} from "@/types/api";
+
 export type meal = {
     "creationDate": Date,
     "creator": string,
@@ -5,10 +7,18 @@ export type meal = {
 
 }
 
+export type manifestIngredient = {
+    "name": string,
+    "healthyOption": "vegan" | "vegetarian" | "meat"
+    "unit": string
+}
+
 export type filterNames = "vegan" | "vegetarian" | "meat"
 export type excludedIngredient = string
 
+
 export type filterObject = {
+
     healthyOption: filterNames,
     excludedIngredients: excludedIngredient[],
     requiredIngredients: string[]
@@ -29,4 +39,15 @@ export namespace apiTypes {
             returnArray: meal[]
         }
     }
+}
+
+
+export type manifest = {
+    paths: {
+        ingredients: string
+    }
+}
+
+export type ingredientManifest = {
+    ingredients: manifestIngredient[]
 }

@@ -1,0 +1,24 @@
+{
+  "ingredients": [
+    {
+      "type": "vegan",
+      "name": "wheat",
+      "unit": "g"
+    },
+    {
+      "type": "vegetarian",
+      "name": "mozarella",
+      "unit": "pieces"
+    },
+    {
+      "type": "meat",
+      "name": "salami",
+      "unit": "g"
+    },
+    {
+      "type": "vegetarian",
+      "name": "yeast",
+      "unit": "g"
+    }
+  ]
+}

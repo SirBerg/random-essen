@@ -1,0 +1,5 @@
+{
+  "paths": {
+    "ingredients": "/api/manifests/ingredients.json"
+  }
+}
