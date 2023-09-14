@@ -17,7 +17,9 @@ export default function Home() {
                         </Link>
                     </HomepageButton>
                     <HomepageButton>
-                        Randomize
+                        <Link href="/random">
+                            Randomize
+                        </Link>
                     </HomepageButton>
                 </Stack>
             </Center>

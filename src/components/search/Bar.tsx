@@ -4,24 +4,6 @@ import {SearchIcon} from "@chakra-ui/icons";
 import {FormEvent, useState, useEffect, useRef} from "react";
 import Link from "next/link";
 
-/*
-*                 <Box
-                    as = {motion.div}
-                    initial={{
-                        opacity: 0,
-                        scale: 0.9
-                    }}
-                    animate = {{
-                        scale: 1.1,
-                        opacity: 1
-                    }}
-                    exit={{
-                        opacity: 0,
-                        scale: 0.9
-                    }}
-                >
-* */
-
 export default function SearchBar(){
     const [searchResult, setSearchResult] = useState(<></>)
     useEffect(() => {
