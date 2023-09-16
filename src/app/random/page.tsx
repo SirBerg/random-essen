@@ -24,7 +24,6 @@ import {useEffect, useState} from "react";
 import * as types from '@/types/index'
 import { redirect } from 'next/navigation'
 import {Input} from "@chakra-ui/input";
-import '@/app/random/random.css'
 export default function Handler(){
     const [ingredients, setIngredients] = useState(<></>)
 
@@ -94,6 +93,7 @@ export default function Handler(){
 
     return(
         <Box className="randomize-override">
+            <link href="/stylesheets/random.css" type="text/css" rel="stylesheet" />
             <Grid templateColumns="repeat(7, 1fr)" gap={1} height="auto" position="relative">
                 <GridItem overflow="hidden">
                     <Center bg="url(/meals/chili-con-carne.jpg)" className="meal-container">
