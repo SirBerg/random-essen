@@ -10,11 +10,21 @@ import {
     MenuOptionGroup,
     MenuDivider,
 } from '@chakra-ui/react'
+
+import {
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
+} from '@chakra-ui/react'
+
 import {ChevronDownIcon} from "@chakra-ui/icons";
 import {useEffect, useState} from "react";
 import * as types from '@/types/index'
 import { redirect } from 'next/navigation'
-
+import {Input} from "@chakra-ui/input";
+import '@/app/random/random.css'
 export default function Handler(){
     const [ingredients, setIngredients] = useState(<></>)
 
@@ -41,6 +51,7 @@ export default function Handler(){
     }
 
 
+
     useEffect(() => {
         async function wrapper(){
             try{
@@ -54,6 +65,7 @@ export default function Handler(){
 
                 //fill the ingredients dropdowns
                 setIngredients(
+
                     // @ts-ignore
                     ingredientManifest.ingredients.map((ingredient)=>{
                         return(
@@ -78,51 +90,64 @@ export default function Handler(){
             }
         }
         wrapper()
-
     }, []);
 
-
     return(
-        <AbsoluteCenter>
+        <Box className="randomize-override">
+            <Grid templateColumns="repeat(7, 1fr)" gap={1} height="auto" position="relative">
+                <GridItem overflow="hidden">
+                    <Center bg="url(/meals/chili-con-carne.jpg)" className="meal-container">
+                        <Button>
+                            Chili con Carne
+                        </Button>
+                    </Center>
+                </GridItem>
+                <GridItem maxWidth="92vh" overflow="hidden">
+                    <Center bg="url(/meals/flammkuchen.jpg)" className="meal-container">
+                        <Button>
+                            Flammkuchen
+                        </Button>
+                    </Center>
+                </GridItem>
+                <GridItem maxWidth="92vh" overflow="hidden">
+                    <Center bg="url(/meals/hot-dog.jpg)" className="meal-container">
+                        <Button>
+                            Hot Dog
+                        </Button>
+                    </Center>
+                </GridItem>
+                <GridItem maxWidth="92vh" overflow="hidden">
+                    <Center bg="url(/meals/lasagne.jpg)" className="meal-container">
+                        <Button>
+                            Lasagne
+                        </Button>
+                    </Center>
+                </GridItem>
+                <GridItem maxWidth="92vh" overflow="hidden">
+                    <Center bg="url(/meals/pfannkuchen.jpg)" className="meal-container">
+                        <Button>
+                            Pfannkuchen
+                        </Button>
+                    </Center>
+                </GridItem>
+                <GridItem maxWidth="92vh" overflow="hidden">
+                    <Center bg="url(/meals/pizza.webp)" className="meal-container">
+                        <Button>
+                           Pizza
+                        </Button>
+                    </Center>
+                </GridItem>
+                <GridItem maxWidth="92vh" overflow="hidden">
+                    <Center bg="url(/meals/spaghetti-bolognese.jpg)" className="meal-container">
+                        <Button wordBreak="break-word" padding="5px">
+                            Spaghetti Bolognese
+                        </Button>
+                    </Center>
+                </GridItem>
+            </Grid>
             <Box>
-                <Grid templateColumns="repeat(3, 1fr)" gap={5}>
-                    <Stack>
-                        <b>Include these Ingredients</b>
-                        <Menu>
-                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                                none
-                            </MenuButton>
-                            <Center>
-                                <MenuList color="black">
-                                    {ingredients}
-                                </MenuList>
-                            </Center>
-                        </Menu>
-                    </Stack>
-                    <Stack>
-                        <b>Exclude these Ingredients</b>
-                        <Menu>
-                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                                none
-                            </MenuButton>
-                            <MenuList color="black">
-                                {ingredients}
-                            </MenuList>
-                        </Menu>
-                    </Stack>
-                    <Stack>
-                        <b>Include these Ingredients</b>
-                        <Menu>
-                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                                none
-                            </MenuButton>
-                            <MenuList  color="black">
-                            </MenuList>
-                        </Menu>
-                    </Stack>
-                </Grid>
 
             </Box>
-        </AbsoluteCenter>
+        </Box>
     )
 }

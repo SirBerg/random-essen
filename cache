@@ -1,0 +1,94 @@
+            <Box>
+                <Grid templateColumns="repeat(3, 1fr)" gap={5}>
+                    <Stack>
+                        <h4>Include</h4>
+                        <Menu>
+                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                                none
+                            </MenuButton>
+                            <Center>
+                                <MenuList color="black">
+                                    {ingredients}
+                                </MenuList>
+                            </Center>
+                        </Menu>
+                    </Stack>
+                    <Stack>
+                        <h4>Exclude</h4>
+                        <Menu>
+                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                                none
+                            </MenuButton>
+                            <MenuList color="black">
+                                {ingredients}
+                            </MenuList>
+                        </Menu>
+                    </Stack>
+                    <Stack>
+                        <h4>Vegan?</h4>
+                        <Menu>
+                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                                Include Meat
+                            </MenuButton>
+                            <MenuList color="black">
+                                <Box id="wrapper-healthy-option">
+                                    <Grid templateColumns="repeat(7, 1fr)" gap={0}>
+                                        <GridItem colSpan={1}>
+                                            <Center h="100%">
+                                                <Checkbox defaultChecked />
+                                            </Center>
+                                        </GridItem>
+                                        <GridItem colSpan={6}>
+                                            <MenuItem>
+                                                Include Meat
+                                            </MenuItem>
+                                        </GridItem>
+                                    </Grid>
+                                    <Grid templateColumns="repeat(7, 1fr)" gap={0}>
+                                        <GridItem colSpan={1}>
+                                            <Center h="100%">
+                                                <Checkbox defaultChecked />
+                                            </Center>
+                                        </GridItem>
+                                        <GridItem colSpan={6}>
+                                            <MenuItem>
+                                                Include Vegetarian
+                                            </MenuItem>
+                                        </GridItem>
+                                    </Grid>
+                                    <Grid templateColumns="repeat(7, 1fr)" gap={0}>
+                                        <GridItem colSpan={1}>
+                                            <Center h="100%">
+                                                <Checkbox defaultChecked />
+                                            </Center>
+                                        </GridItem>
+                                        <GridItem colSpan={6}>
+                                            <MenuItem>
+                                                Include Vegan
+                                            </MenuItem>
+                                        </GridItem>
+                                    </Grid>
+                                </Box>
+                            </MenuList>
+                        </Menu>
+                    </Stack>
+                    <Stack>
+                        <h4>
+                            How many?
+                        </h4>
+                        <NumberInput defaultValue={5} min={1} max={25}>
+                            <NumberInputField className="inverted-bg" cursor="not-allowed" readOnly={false} />
+                        </NumberInput>
+                        <Box>
+                            <Stack direction="row">
+                                <Center>
+                                    <Checkbox style={{marginRight:"5px"}} className="inverted-bg" />
+                                </Center>
+                                <Box>
+                                    I'd like to generate a week of meals
+                                </Box>
+                            </Stack>
+                        </Box>
+                    </Stack>
+                </Grid>
+            </Box>

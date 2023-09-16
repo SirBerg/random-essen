@@ -1,0 +1,24 @@
+.randomize-override{
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 10vh;
+    position: absolute;
+    left: 0;
+    top: 62px;
+}
+.meal-container{
+    height:92vh;
+    background-size: cover;
+    transition: 0.5s all;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.meal-container:hover{
+    transform: scale(1.1)
+}
+
+
+.filter-container{
+    background-color: #f89b29;
+
+}
