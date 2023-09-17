@@ -90,27 +90,27 @@ export default function Handler(){
                                 Actions
                             </MenuButton>
                             <MenuList color="black">
-                                <MenuItem onClick={()=>handleFilterClick('include')}>
-                                    Forced Ingredients
+                                <MenuItem>
+                                    Vegan
                                 </MenuItem>
                                 <MenuItem>
-                                    Excluded Ingredients
+                                    Vegetarian
                                 </MenuItem>
                                 <MenuItem>
-                                    Vegan?
+                                    All
                                 </MenuItem>
                             </MenuList>
                         </Menu>
                     ) : (
                         <Stack direction="row">
-                            <Button onClick={()=>handleFilterClick('include')}>
-                                Included Ingredients
+                            <Button variant="outline">
+                                Vegan
                             </Button>
-                            <Button>
-                                Excluded Ingredients
+                            <Button colorScheme="green">
+                                All
                             </Button>
-                            <Button>
-                                Vegan?
+                            <Button variant="outline">
+                                Vegetarian
                             </Button>
                         </Stack>
                     )
