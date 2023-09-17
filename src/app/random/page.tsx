@@ -11,22 +11,22 @@ import {
     MenuDivider,
 } from '@chakra-ui/react'
 
-import {
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,
-} from '@chakra-ui/react'
 
 import {ChevronDownIcon} from "@chakra-ui/icons";
 import {useEffect, useState} from "react";
 import * as types from '@/types/index'
 import { redirect } from 'next/navigation'
 import {Input} from "@chakra-ui/input";
-export default function Handler(){
-    const [ingredients, setIngredients] = useState(<></>)
+import RandomizationElement from "@/components/ui/app/random/RandomizationElement";
+import {IncludedIngredientsOverlay} from '@/components/ui/app/random/Overlays'
 
+export default function Handler(){
+    const [overlayState, setOverlayState] = useState(<></>)
+    const [height, setHeight] = useState(0)
+    const [width, setWidth] = useState(0)
+
+    //manifests
+    const [ingredientManifest, setIngredientManifest] = useState({})
 
     //making get requests
     async function makeGETRequest(location:string):Promise<string>{
@@ -49,105 +49,73 @@ export default function Handler(){
         })
     }
 
+    const handleFilterClick = (type:"include" | "exclude" | "healthyOption")=>{
+        setOverlayState(<IncludedIngredientsOverlay removeOverlay={removeOverlay}/>)
+    }
+
+    function removeOverlay(){
+        setOverlayState(<></>)
+    }
 
 
     useEffect(() => {
-        async function wrapper(){
-            try{
-                const manifest:string = await makeGETRequest("/api/manifest.json")
-
-                let jsonManifest:types.manifest
-                let ingredientManifest:types.ingredientManifest
-                jsonManifest = await JSON.parse(manifest)
-                let cacheString:string = await makeGETRequest(jsonManifest.paths.ingredients)
-                ingredientManifest = await JSON.parse(cacheString)
-
-                //fill the ingredients dropdowns
-                setIngredients(
-
-                    // @ts-ignore
-                    ingredientManifest.ingredients.map((ingredient)=>{
-                        return(
-                            <Grid templateColumns="repeat(7, 1fr)" gap={0}>
-                                <GridItem colSpan={1}>
-                                    <Center h="100%">
-                                        <Checkbox defaultChecked />
-                                    </Center>
-                                </GridItem>
-                                <GridItem colSpan={6}>
-                                    <MenuItem key={ingredient.name}>
-                                        {ingredient.name}
-                                    </MenuItem>
-                                </GridItem>
-                            </Grid>
-                        )
-                    })
-                )
-            }
-            catch(e){
-                console.log('Error: ', e)
-            }
+        function handleResize(){
+            setHeight(window.innerHeight)
+            setWidth(window.innerWidth)
         }
-        wrapper()
+        window.addEventListener('resize', handleResize)
+        handleResize()
     }, []);
 
     return(
-        <Box className="randomize-override">
+        <Box>
+            {overlayState}
             <link href="/stylesheets/random.css" type="text/css" rel="stylesheet" />
-            <Grid templateColumns="repeat(7, 1fr)" gap={1} height="auto" position="relative">
-                <GridItem overflow="hidden">
-                    <Center bg="url(/meals/chili-con-carne.jpg)" className="meal-container">
-                        <Button>
-                            Chili con Carne
-                        </Button>
-                    </Center>
-                </GridItem>
-                <GridItem maxWidth="92vh" overflow="hidden">
-                    <Center bg="url(/meals/flammkuchen.jpg)" className="meal-container">
-                        <Button>
-                            Flammkuchen
-                        </Button>
-                    </Center>
-                </GridItem>
-                <GridItem maxWidth="92vh" overflow="hidden">
-                    <Center bg="url(/meals/hot-dog.jpg)" className="meal-container">
-                        <Button>
-                            Hot Dog
-                        </Button>
-                    </Center>
-                </GridItem>
-                <GridItem maxWidth="92vh" overflow="hidden">
-                    <Center bg="url(/meals/lasagne.jpg)" className="meal-container">
-                        <Button>
-                            Lasagne
-                        </Button>
-                    </Center>
-                </GridItem>
-                <GridItem maxWidth="92vh" overflow="hidden">
-                    <Center bg="url(/meals/pfannkuchen.jpg)" className="meal-container">
-                        <Button>
-                            Pfannkuchen
-                        </Button>
-                    </Center>
-                </GridItem>
-                <GridItem maxWidth="92vh" overflow="hidden">
-                    <Center bg="url(/meals/pizza.webp)" className="meal-container">
-                        <Button>
-                           Pizza
-                        </Button>
-                    </Center>
-                </GridItem>
-                <GridItem maxWidth="92vh" overflow="hidden">
-                    <Center bg="url(/meals/spaghetti-bolognese.jpg)" className="meal-container">
-                        <Button wordBreak="break-word" padding="5px">
-                            Spaghetti Bolognese
-                        </Button>
-                    </Center>
-                </GridItem>
-            </Grid>
-            <Box>
-
-            </Box>
+            <Center width={width - 40}>
+                <Grid gap={1} className="random-grid" width={width - 40}>
+                    <RandomizationElement backgroundImage="/meals/chili-con-carne.jpg" name="Chili con Carne" uri="string" />
+                    <RandomizationElement backgroundImage="/meals/flammkuchen.jpg" name="Flammkuchen" uri="string" />
+                    <RandomizationElement backgroundImage="/meals/hot-dog.jpg" name="Hot Dog" uri="string" />
+                    <RandomizationElement backgroundImage="/meals/lasagne.jpg" name="Lasagne" uri="string" />
+                    <RandomizationElement backgroundImage="/meals/pfannkuchen.jpg" name="Pfannkuchen" uri="string" />
+                    <RandomizationElement backgroundImage="/meals/pizza.webp" name="Pizza" uri="string" />
+                    <RandomizationElement backgroundImage="/meals/spaghetti-bolognese.jpg" name="Spaghetti Bolognese" uri="string" />
+                </Grid>
+            </Center>
+            <Center className="filter-container" width={width} height={75} bgColor="orange.500">
+                {
+                    width < 1000 ? (
+                        <Menu>
+                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                                Actions
+                            </MenuButton>
+                            <MenuList color="black">
+                                <MenuItem onClick={()=>handleFilterClick('include')}>
+                                    Forced Ingredients
+                                </MenuItem>
+                                <MenuItem>
+                                    Excluded Ingredients
+                                </MenuItem>
+                                <MenuItem>
+                                    Vegan?
+                                </MenuItem>
+                            </MenuList>
+                        </Menu>
+                    ) : (
+                        <Stack direction="row">
+                            <Button onClick={()=>handleFilterClick('include')}>
+                                Included Ingredients
+                            </Button>
+                            <Button>
+                                Excluded Ingredients
+                            </Button>
+                            <Button>
+                                Vegan?
+                            </Button>
+                        </Stack>
+                    )
+                }
+            </Center>
         </Box>
     )
 }

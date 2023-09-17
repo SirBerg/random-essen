@@ -1,24 +1,75 @@
-.randomize-override{
-    width: 100vw !important;
-    max-width: 100vw !important;
-    height: 10vh;
-    position: absolute;
-    left: 0;
-    top: 62px;
+:root{
+    --grid-layout: repeat(7, 1fr)
 }
-.meal-container{
-    height:92vh;
-    background-size: cover;
-    transition: 0.5s all;
-    background-position: center;
-    background-repeat: no-repeat;
+
+@media only screen and (max-width: 750px){
+    .meal-container{
+        background-size: cover;
+        max-height: 150px;
+        transition: 0.5s all;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100vw;
+    }
+    .random-grid{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+    }
+    :root{
+        --grid-layout: repeat(1, 1fr);
+    }
 }
+
+@media only screen and (min-width: 950px){
+    .meal-container{
+        background-size: cover;
+        height: 85vh;
+        transition: 0.5s all;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+}
+
+@media only screen and (max-height: 950px){
+    .meal-container{
+        background-size: cover;
+        height: 150px;
+        transition: 0.5s all;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    :root{
+        --grid-layout: repeat(1, 1fr);
+    }
+}
+
+@media only screen and (min-height: 950px){
+    .meal-container{
+        background-size: cover;
+        height: 85vh;
+        transition: 0.5s all;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+
 .meal-container:hover{
     transform: scale(1.1)
 }
 
+main{
+    width: 100%;
+    margin: 0px;
+}
+
+.random-grid{
+    display: grid;
+    grid-template-columns: var(--grid-layout);
+}
 
 .filter-container{
-    background-color: #f89b29;
-
+    position: fixed;
+    bottom: 0;
+    left: 0;
 }
