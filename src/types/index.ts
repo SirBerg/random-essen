@@ -1,4 +1,3 @@
-import {ingredient} from "@/types/api";
 export type updateActionType = "update" | "add" | "delete"
 export type updatePathType = "includedIngredients" | "includedMeals" | "includedHealthyOptions" | "count" | "includeRepeats"
 
@@ -16,7 +15,7 @@ export type manifestIngredient = {
     "unit": string
 }
 
-export type filterNames = "vegan" | "vegetarian" | "meat"
+export type filterNames = "vegan" | "vegetarian" | "all"
 export type excludedIngredient = string
 
 export namespace apiTypes {
@@ -36,11 +35,7 @@ export namespace apiTypes {
 
     export interface randomizeRequest extends baseRequest{
         filter: {
-            includedMeals: string[] | ["all"],
-            includedIngredients: string[] | ["all"],
-            includedHealthyOptions: filterNames[],
-            count: number,
-            includeRepeats: boolean
+            includedHealthyOptions: filterNames,
         }
     }
     export type baseResponse = {

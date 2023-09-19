@@ -17,7 +17,6 @@ export default function SearchBar(){
         }, {passive: true})
     }, []);
     const handleInput = (e:FormEvent<HTMLInputElement>) => {
-        console.log(e.target.width)
         setSearchResult(
             <Center width="100vw" position="absolute" left="0" top="86px" id="result-center">
                 <Box className="search-result" id="result-box">

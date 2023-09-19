@@ -9,10 +9,8 @@ import {Box} from "@chakra-ui/react";
 import {useEffect} from "react";
 import {useRouter} from 'next/router'
 export default function Handler(){
-    useEffect(() => {
-        const router = useRouter()
-        router.push('/')
-    }, []);
+    const router = useRouter()
+    router.push('/')
     return(
         <Box>
 

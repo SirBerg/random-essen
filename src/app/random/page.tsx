@@ -19,11 +19,25 @@ import { redirect } from 'next/navigation'
 import {Input} from "@chakra-ui/input";
 import RandomizationElement from "@/components/ui/app/random/RandomizationElement";
 import {IncludedIngredientsOverlay} from '@/components/ui/app/random/Overlays'
+import FilterMenu from "@/components/ui/app/random/FilterMenu";
+
 
 export default function Handler(){
     const [overlayState, setOverlayState] = useState(<></>)
     const [height, setHeight] = useState(0)
     const [width, setWidth] = useState(0)
+
+    const [backgroundImage, setBackgroundImage] = useState(undefined)
+
+
+    const [requestObject, setRequestObject] = useState<types.apiTypes.randomizeRequest>({
+        manifest: false,
+        requestTime: new Date(),
+        filter:{
+            includedHealthyOptions: "all",
+        }
+    })
+
 
     //manifests
     const [ingredientManifest, setIngredientManifest] = useState({})
@@ -49,14 +63,16 @@ export default function Handler(){
         })
     }
 
-    const handleFilterClick = (type:"include" | "exclude" | "healthyOption")=>{
-        setOverlayState(<IncludedIngredientsOverlay removeOverlay={removeOverlay}/>)
-    }
 
-    function removeOverlay(){
-        setOverlayState(<></>)
+    function manageSelectedFilter(filter: types.filterNames){
+        setRequestObject({
+            manifest: false,
+            requestTime: new Date(),
+            filter: {
+                includedHealthyOptions: filter
+            }
+        })
     }
-
 
     useEffect(() => {
         function handleResize(){
@@ -66,6 +82,16 @@ export default function Handler(){
         window.addEventListener('resize', handleResize)
         handleResize()
     }, []);
+
+    const toggleBGImage = () =>{
+        console.log(backgroundImage)
+        if(!backgroundImage){
+            setBackgroundImage("/meals/chili-con-carne.jpg")
+        }
+        else{
+            setBackgroundImage(undefined)
+        }
+    }
 
     return(
         <Box>
@@ -82,40 +108,7 @@ export default function Handler(){
                     <RandomizationElement backgroundImage="/meals/spaghetti-bolognese.jpg" name="Spaghetti Bolognese" uri="string" />
                 </Grid>
             </Center>
-            <Center className="filter-container" width={width} height={75} bgColor="orange.500">
-                {
-                    width < 1000 ? (
-                        <Menu>
-                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                                Actions
-                            </MenuButton>
-                            <MenuList color="black">
-                                <MenuItem>
-                                    Vegan
-                                </MenuItem>
-                                <MenuItem>
-                                    Vegetarian
-                                </MenuItem>
-                                <MenuItem>
-                                    All
-                                </MenuItem>
-                            </MenuList>
-                        </Menu>
-                    ) : (
-                        <Stack direction="row">
-                            <Button variant="outline">
-                                Vegan
-                            </Button>
-                            <Button colorScheme="green">
-                                All
-                            </Button>
-                            <Button variant="outline">
-                                Vegetarian
-                            </Button>
-                        </Stack>
-                    )
-                }
-            </Center>
+            <FilterMenu updateCallback={manageSelectedFilter} width={width} />
         </Box>
     )
 }

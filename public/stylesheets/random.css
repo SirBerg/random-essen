@@ -15,6 +15,15 @@
         display: grid;
         grid-template-columns: repeat(1, 1fr);
     }
+    .meal-container-text{
+        background-size: cover;
+        max-height: 150px;
+        transition: 0.5s all;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin-top: -150px
+    }
+
     :root{
         --grid-layout: repeat(1, 1fr);
     }
@@ -28,7 +37,13 @@
         background-position: center;
         background-repeat: no-repeat;
     }
-
+    .meal-container-text{
+        background-size: cover;
+        height: 84vh;
+        transition: 0.5s all;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
 }
 
 @media only screen and (max-height: 950px){
@@ -39,6 +54,14 @@
         background-position: center;
         background-repeat: no-repeat;
     }
+    .meal-container-text{
+        background-size: cover;
+        height: 150px;
+        transition: 0.5s all;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin-top: -150px
+    }
     :root{
         --grid-layout: repeat(1, 1fr);
     }
@@ -47,14 +70,21 @@
 @media only screen and (min-height: 950px){
     .meal-container{
         background-size: cover;
-        height: 85vh;
+        height: 84vh;
+        transition: 0.5s all;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .meal-container-text{
+        background-size: cover;
+        height: 84vh;
         transition: 0.5s all;
         background-position: center;
         background-repeat: no-repeat;
     }
 }
 
-.meal-container:hover{
+.meal-container-text:hover{
     transform: scale(1.1)
 }
 
@@ -72,4 +102,16 @@ main{
     position: fixed;
     bottom: 0;
     left: 0;
+}
+
+
+.meal-background-image{
+    position: fixed;
+    height: 84vh;
+    left: 0;
+    width: 100%;
+}
+
+.meal-background-image:hover{
+    scale: 1.1
 }

@@ -8,7 +8,8 @@ export default authMiddleware({
         "/",
         "/random",
         "/api/manifest.json",
-        "/api/manifests/ingredients.json"
+        "/api/manifests/ingredients.json",
+        "/api/randomize"
     ]
 });
 
