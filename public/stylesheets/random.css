@@ -1,5 +1,11 @@
 :root{
-    --grid-layout: repeat(7, 1fr)
+    --grid-layout: repeat(7, 1fr);
+    --filter-background: black
+}
+
+
+@media (prefers-color-scheme: light){
+    --filter-background: white;
 }
 
 @media only screen and (max-width: 750px){
@@ -102,6 +108,7 @@ main{
     position: fixed;
     bottom: 0;
     left: 0;
+    background-color: var(--filter-background)
 }
 
 

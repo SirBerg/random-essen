@@ -8,6 +8,14 @@ export default function SearchBar(){
     const [searchResult, setSearchResult] = useState(<></>)
     useEffect(() => {
 
+        //remove on esc press
+        document.addEventListener('keydown', (event:KeyboardEvent) => {
+            if(event.code === 'Escape'){
+                setSearchResult(<></>)
+            }
+        })
+
+
         //remove search results when clicking outside of them
         document.addEventListener('click', e=>{
             const clickedOnElement:Element | null = document.elementFromPoint(e.clientX, e.clientY)
@@ -34,7 +42,7 @@ export default function SearchBar(){
                 <InputLeftElement pointerEvents='none'>
                     <SearchIcon color="black" />
                 </InputLeftElement>
-                <Input placeholder='Search for a meal' style={{caretColor:"blue"}} onInput={(e)=>handleInput(e)} color="black" maxWidth="280px"/>
+                <Input isDisabled placeholder='Search for a meal' style={{caretColor:"blue"}} onInput={(e)=>handleInput(e)} color="black" maxWidth="280px"/>
             </InputGroup>
             {searchResult}
         </div>

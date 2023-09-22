@@ -1,0 +1,39 @@
+blockquote{
+    border-left: 0.25rem solid #d703e5;
+    padding-left: 0.25rem
+}
+
+strong{
+    color: #ff0f7b !important;
+    font-weight: bolder;
+}
+
+hr{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+li{
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+code {
+    background-color: gray;
+    padding: 3px;
+    border-radius: 5px;
+}
+
+a {
+    color: #0332eb;
+    text-decoration: #000d8a underline 2px;
+}
+
+a:visited{
+    color: #f89b29;
+    text-decoration: #f89b29;
+}
+
+img{
+    border-radius: 5px;
+}

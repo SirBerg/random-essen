@@ -9,7 +9,9 @@ export default authMiddleware({
         "/random",
         "/api/manifest.json",
         "/api/manifests/ingredients.json",
-        "/api/randomize"
+        "/api/manifests/units",
+        "/api/randomize",
+        "/meal/:id"
     ]
 });
 

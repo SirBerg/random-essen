@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import {Center, Stack} from "@chakra-ui/react";
+import {Button, Center, Stack} from "@chakra-ui/react";
 import HomepageButton from "@/components/ui/button";
 import Link from 'next/link'
 export default function Home() {
@@ -11,11 +11,9 @@ export default function Home() {
             </h1>
             <Center>
                 <Stack direction="row">
-                    <HomepageButton>
-                        <Link href="/app">
-                            Add a Meal
-                        </Link>
-                    </HomepageButton>
+                    <Button isDisabled>
+                        Add a Meal
+                    </Button>
                     <HomepageButton>
                         <Link href="/random">
                             Randomize

@@ -1,7 +1,7 @@
 import {Button, Center, Stack} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 
-export default function FilterMenu({updateCallback, width}:{updateCallback:Function, width:number}){
+export default function FilterMenu({updateCallback, width, height, generateCallback}:{updateCallback:Function, width:number, height:number, generateCallback:Function}){
     const [veganButtonColorScheme, setVeganButtonColorScheme] = useState("ghost")
     const [allButtonColorScheme, setAllButtonColorScheme] = useState('solid')
     const [vegetarianButtonColorScheme, setVegetarianButtonColorScheme] = useState('ghost')
@@ -31,9 +31,9 @@ export default function FilterMenu({updateCallback, width}:{updateCallback:Funct
     }, []);
 
     return(
-        <Center className="filter-container" width={width} height={90}  bgColor="whiteAlpha.500" position="relative">
+        <Center className="filter-container" width={width} height={90} position="relative">
             <Stack direction="row">
-                <Button>
+                <Button onClick={()=>{generateCallback()}}>
                     Generate!
                 </Button>
                 <Button variant={veganButtonColorScheme} color="white" colorScheme="green" onClick={()=>handleClick('vegan')}>

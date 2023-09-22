@@ -1,4 +1,3 @@
-'use client'
 import {
     SignedIn,
     SignedOut, SignIn,
@@ -6,11 +5,10 @@ import {
     UserButton
 } from "@clerk/nextjs";
 import {Box} from "@chakra-ui/react";
-import {useEffect} from "react";
-import {useRouter} from 'next/router'
+import {redirect} from "next/navigation";
+
 export default function Handler(){
-    const router = useRouter()
-    router.push('/')
+    redirect('/')
     return(
         <Box>
 
