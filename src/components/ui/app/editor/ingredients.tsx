@@ -36,7 +36,8 @@ export function IngredientRow({name, unit, amount, healthyOption, callback, inde
 
 
 
-export default function Ingredients({ingredientsObject={ingredients:[]}}:{ingredientsObject:{ingredients:types.frontend.ingredient}}){
+//@ts-ignore
+export default function Ingredients({ingredientsObject={ingredients:[]}}:{ingredientsObject:{ingredients:types.frontend.ingredient[]}}){
     const toast = useToast()
 
     const [ingredientsTable, setIngredientsTable] = useState()
@@ -45,6 +46,8 @@ export default function Ingredients({ingredientsObject={ingredients:[]}}:{ingred
     const [unitPersistentStorage, setUnitPersistentStorage] = useState({})
 
     const renderIngredients = () => {
+
+        //@ts-ignore
         return(setIngredientsTable(ingredientsObject.ingredients.map((ingredient:types.frontend.ingredient, index:number)=>{
             return(<IngredientRow name={ingredient.name} unit={ingredient.unit.name} amount={ingredient.amount} healthyOption={ingredient.healthyOption} key={index} callback={removeIngredient} index={index}/>)
         })))
@@ -61,15 +64,16 @@ export default function Ingredients({ingredientsObject={ingredients:[]}}:{ingred
         const amountInput:HTMLElement | null = document.getElementById('amount-input')
         const healthyOptionInput:HTMLElement | null = document.getElementById('healthyOptionInput')
 
-        console.log(healthyOptionInput)
+
         //if the input should not be found then just return (this shouldn't happen, how did you get here?)
         if(!nameInput || !unitInput || !amountInput || !amountInput || !healthyOptionInput){
             return
         }
 
-        console.log(healthyOptionInput.value, unitInput.value, nameInput.value, amountInput.value)
+
 
         //invalidate the input fields if no input is detected
+        //@ts-ignore
         if(!nameInput.value || !unitInput.value || !amountInput.value || !healthyOptionInput.value){
             setInvalidate(true)
             toast({
@@ -84,9 +88,14 @@ export default function Ingredients({ingredientsObject={ingredients:[]}}:{ingred
             }, 2000)
             return
         }
+
+
         const objectToPush:types.frontend.ingredient = {
+            //@ts-ignore
             name: nameInput.value,
+            //@ts-ignore
             unit: unitPersistentStorage.body[parseInt(unitInput.value)],
+            //@ts-ignore
             amount: parseFloat(amountInput.value),
 
             //this is a select element, it cannot be outside of the filter names

@@ -19,6 +19,7 @@ export default function Editor(){
 
     function insertAtCursor(value:string){
 
+        //@ts-ignore
         const input:HTMLInputElement | null = document.getElementById('editor-field')
         if(!input) return
         input.focus()
@@ -85,6 +86,7 @@ export default function Editor(){
                     </GridItem>
                 </Grid>
                 <h2>Ingredients</h2>
+                {/*@ts-ignore*/}
                 <Ingredients ingredientsObject={ingredients}/>
                 <h2>Recipe</h2>
                 <Box id="toolbar">

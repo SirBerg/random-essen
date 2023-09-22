@@ -66,6 +66,8 @@ export async function POST(request: Request){
     }
 
     const pb = new PocketBase('http://127.0.0.1:8090')
+
+    //@ts-ignore
     const authData = await pb.admins.authWithPassword(process.env.POCKETBASE_USERNAME, process.env.POCKETBASE_PASSWORD)
     const records:ListResult<RecordModel> = await pb.collection("Meals").getList(1, 7, {
         sort: '@random',
