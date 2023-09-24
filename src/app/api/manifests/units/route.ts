@@ -3,7 +3,7 @@ import * as types from "@/types/index";
 
 export async function GET(){
     try{
-        const pb = new PocketBase('http://127.0.0.1:8090')
+        const pb = new PocketBase(process.env.POCKETBASE_HOST)
 
         //@ts-ignore
         const authData = await pb.admins.authWithPassword(process.env.POCKETBASE_USERNAME, process.env.POCKETBASE_PASSWORD)
@@ -28,6 +28,7 @@ export async function GET(){
     }
     catch(e){
         console.log('ERROR IN ROUTE')
+        console.log(e)
         const responseObject:types.apiTypes.baseResponse = {
             "isError": true,
             "responseName": "Internal Server Error",

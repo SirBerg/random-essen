@@ -1,15 +1,38 @@
-import {Box, Button, Center, Grid, GridItem, Select, Stack, Textarea} from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    Center,
+    Grid,
+    GridItem,
+    NumberInput,
+    NumberInputField,
+    Select,
+    Stack,
+    Textarea, useToast
+} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import {unified} from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
 import {Input} from "@chakra-ui/input";
-
+import {auth, useUser} from "@clerk/nextjs";
 import Ingredients from "@/components/ui/app/editor/ingredients";
+import {apiTypes} from "@/types";
+import baseResponse = apiTypes.baseResponse;
+import mealCreationRequest = apiTypes.mealCreationRequest;
 
 export default function Editor(){
+    const toast = useToast()
+    const {isLoaded, isSignedIn, user} = useUser()
     const [fieldValue, setFieldValue] = useState("")
+
+    const [invalidateName, setInvalidateName] = useState(false)
+    const [invalidateImage, setInvalidateImage] = useState("gray.600")
+    const [invalidateHealthyOption, setInvalidateHealthyOption] = useState(false)
+    const [invalidatePersons, setInvalidatePersons] = useState(false)
+    const [invalidateRecipe, setInvalidateRecipe] = useState(false)
+
 
     const [ingredients, setIngredients] = useState({
         ingredients: []
@@ -49,6 +72,130 @@ export default function Editor(){
         wrapper()
     }
 
+    const alertManager = (title:string, message:string, status:'info' | 'warning' | "error" | "success" | "loading" | undefined) => {
+        toast({
+            title: title,
+            description: message,
+            status: status,
+            duration: 5000,
+            isClosable: true
+        })
+    }
+
+    const handleSubmit = async (e:any) => {
+        e.preventDefault()
+
+        //@ts-ignore
+        const editorField:HTMLElement | HTMLInputElement = document.getElementById('editor-field')
+        //@ts-ignore
+        const nameField:HTMLElement | HTMLInputElement = document.getElementById('name-field')
+        //@ts-ignore
+        const healthyOptionField:HTMLElement | HTMLInputElement = document.getElementById('healthyOption-field')
+        //@ts-ignore
+        const personsField:HTMLElement | HTMLInputElement = document.getElementById('persons-field')
+        //@ts-ignore
+        const imageField:HTMLElement | HTMLInputElement = document.getElementById('image-field')
+        //console.log(editorField.value, nameField.value, healthyOptionField.value, personsField.value)
+
+        //check if everything is here and filled out
+        if(!editorField || !nameField || !healthyOptionField || !personsField || !imageField ){
+            alertManager('Whoops!', "Something wen't seriously wrong with the page, please consider reloading if this error persist! (Code: #00004)", 'error')
+            return
+        }
+        if(!editorField.value || !nameField.value || !healthyOptionField.value || !personsField.value || imageField.files.length === 0 || ingredients.ingredients.length === 0){
+            alertManager('Missing Data', "It seems like you might've forgotten some fields! Please check if you have filled out every field and then try again (Code: #00005)", 'warning')
+            if(!editorField.value){
+                setInvalidateRecipe(true)
+                setTimeout(()=>{
+                    setInvalidateRecipe(false)
+                }, 2000)
+            }
+            if(!nameField.value){
+                setInvalidateName(true)
+                setTimeout(()=>{
+                    setInvalidateName(false)
+                }, 2000)
+            }
+            if(!healthyOptionField.value){
+                setInvalidateHealthyOption(true)
+                setTimeout(()=>{
+                    setInvalidateHealthyOption(false)
+                }, 2000)
+            }
+            if(!personsField.value){
+                setInvalidatePersons(true)
+                setTimeout(()=>{
+                    setInvalidatePersons(false)
+                }, 2000)
+            }
+            if(imageField.files.length === 0){
+                setInvalidateImage("red.500")
+                setTimeout(()=>{
+                    setInvalidateImage("gray.600")
+                }, 2000)
+            }
+            if(ingredients.ingredients.length === 0){
+                alertManager('Please provide Ingredient', "A meal needs ingredients, please provide some (Code:#00006)", 'error')
+            }
+            return
+        }
+        //perform black magic to upload file
+        const formData:FormData = new FormData()
+        Object.values(imageField.files).forEach(file=> {
+            //@ts-ignore
+            formData.append('file', file)
+        })
+        formData.append('id', 'not-yet-known')
+        const response:Response = await fetch('/api/app/upload', {
+            method: 'POST',
+            body: formData
+        });
+
+        const body:apiTypes.uploadResponse | apiTypes.baseResponse = await response.json() as apiTypes.uploadResponse | apiTypes.baseResponse;
+        if(body.isError === true){
+            alertManager('File Upload Error!', "Sorry, but we're having trouble uploading your Image :( . Maybe try another one or try again later. \n If you are really cool then you could report this to contact@sirberg.tokyo with the code #00003", 'error')
+            //If this was indeed an error then we should not continue
+            return
+        }
+        //upload the rest of the meal
+        const uploadObject:mealCreationRequest = {
+            requestTime: new Date(),
+            manifest: false,
+            body:{
+                name: nameField.value.replaceAll("<", "<_"),
+                image: body.filePath,
+                healthyOption: healthyOptionField.value,
+                ingredients: ingredients.ingredients,
+                recipe: editorField.value,
+
+                //@ts-ignore <- without this a type error occurs here because user could be undefined or null but the user has to be authenticated already to access this page(handled by the middleware)
+                userID: user.id,
+                //@ts-ignore see above comment
+                userIcon: user?.imageUrl,
+                persons: parseInt(personsField.value)
+            }
+        }
+        //send to server and create meal
+        const mealCreationResponse:Response = await fetch("/api/app", {
+            method: "POST",
+            body: JSON.stringify(uploadObject)
+        })
+
+        const mealCreationBody: baseResponse = await mealCreationResponse.json()
+        //this means that the user did not create the meal correctly
+        //this should not occur as the fields will be checked before sending the body (this is just to give user feedback in case of weird edgecases)
+        if(mealCreationBody.isError === true || mealCreationResponse.status === 415){
+            alertManager("Some Fields are Missing!", "It seems like the Server didn't quite understand that. Are there maybe some fields you have missed?", "error")
+            return
+        }
+
+        //give user feedback in case of success
+        if(mealCreationBody.isError === false || mealCreationResponse.status === 201){
+            alertManager("Created!", "Your Meal has been created! You may now view it in the 'Meals created by me' Tab!", 'success')
+            return
+        }
+    }
+
     useEffect(() => {
 
     }, []);
@@ -62,26 +209,35 @@ export default function Editor(){
                     <GridItem>
                         <Stack direction="column">
                             <h4>Name</h4>
-                            <Input></Input>
+                            <Input id="name-field" isInvalid={invalidateName}></Input>
                         </Stack>
                     </GridItem>
                     <GridItem colSpan={2} />
                     <GridItem>
                         <Stack direction="column">
                             <h4>Image</h4>
-                            <Center>
-                                <input type="file" accept="image/png, image/jpeg, image/webp, svg"/>
+                            <Center bgColor={invalidateImage} p="3" borderRadius="5px">
+                                <input id="image-field" type="file" accept=".jpg, .png, jpeg, .webp, .svg"/>
                             </Center>
                         </Stack>
                     </GridItem>
                     <GridItem colSpan={2}>
                         <Stack direction="column">
                             <h4>Is it healthy?</h4>
-                            <Select placeholder='Select option' bgColor="gray.500" color="black" id="healthyOption-input" width="5rem">
+                            <Select placeholder='Select option' bgColor="gray.500" color="black" id="healthyOption-field" width="5rem" isInvalid={invalidateHealthyOption}>
                                 <option value='meat' style={{color:"black"}}>Meat</option>
                                 <option value='vegetarian' style={{color:"black"}}>Vegetarian</option>
                                 <option value='vegan' style={{color:"black"}}>Vegan</option>
                             </Select>
+                        </Stack>
+                    </GridItem>
+                    <GridItem colSpan={1} />
+                    <GridItem colSpan={1}>
+                        <Stack>
+                            <h4>How many persons?</h4>
+                            <NumberInput isInvalid={invalidatePersons}>
+                                <NumberInputField id="persons-field" />
+                            </NumberInput>
                         </Stack>
                     </GridItem>
                 </Grid>
@@ -137,15 +293,15 @@ export default function Editor(){
                 </Box>
                 <Textarea onChange={handleFieldUpdate}
                           id="editor-field"
-                          variant="unstyled"
                           borderWidth="1px"
                           borderRadius="5px"
                           borderColor="gray.500"
                           padding="5px"
                           paddingTop="10px"
+                          isInvalid={invalidateRecipe}
                 />
                 <Box fontSize="10px" color="gray.500" marginTop="-2">Basic Markdown Syntax is supported</Box>
-                <Center><Button colorScheme="green">Create</Button></Center>
+                <Center><Button colorScheme="green" onClick={(e:any)=>handleSubmit(e)}>Create</Button></Center>
                 <h3>Recipe Preview</h3>
                 <Box dangerouslySetInnerHTML={{__html: renderedPreview}} />
             </Stack>

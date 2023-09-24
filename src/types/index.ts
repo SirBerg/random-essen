@@ -12,7 +12,18 @@ export type meal = {
     "name": string,
     "recipe": string,
     "updated": Date,
-    "creator": string
+    "creator": string,
+    "creatorIcon": string,
+    "isApproved": boolean
+}
+
+export type mealSummary = {
+    "id":string,
+    "name":string,
+    "updated":Date,
+    "created":Date,
+    "image":string,
+    "healthyOption":filterNames
 }
 
 export type ingredient = {
@@ -53,11 +64,8 @@ export type manifestIngredient = {
 }
 
 
-
-
 export type filterNames = "vegan" | "vegetarian" | "all" | "meat"
-export type excludedIngredient = string
-
+export type markdownString = string
 
 export namespace apiTypes {
 
@@ -93,6 +101,39 @@ export namespace apiTypes {
 
     export interface unitManifestResponse extends baseResponse{
         body: unit[]
+    }
+
+
+    export interface ingredientCreationRequest extends baseRequest{
+        body:{
+            "name":string,
+            "unit": string
+        }
+    }
+
+    export interface mealCreationRequest extends baseRequest{
+        body:{
+            "name":string,
+            "healthyOption":filterNames,
+
+            //the image is supposed to be a URI as the Image is uploaded seperate from the endpoint
+            "image": string,
+
+            //only IDs should be passed to the endpoint
+            "ingredients": frontend.ingredient[]
+            "recipe": markdownString,
+            "userID": string,
+            "userIcon":string,
+            "persons": number,
+        }
+    }
+
+    export interface uploadResponse extends baseResponse {
+        filePath:string,
+    }
+
+    export interface createdByMeResponse extends baseResponse {
+        body:meal[]
     }
 }
 

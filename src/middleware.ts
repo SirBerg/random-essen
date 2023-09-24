@@ -9,9 +9,12 @@ export default authMiddleware({
         "/random",
         "/api/manifest.json",
         "/api/manifests/ingredients.json",
-        "/api/manifests/units",
         "/api/randomize",
-        "/meal/:id"
+        "/meal/:id",
+
+        //endpoints that are only supposed to be authenticated (used for testing)
+        "/api/manifests/units",
+        "/api/app"
     ]
 });
 
