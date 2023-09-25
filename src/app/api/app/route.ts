@@ -196,7 +196,9 @@ export async function POST(request:Request){
             "recipe": requestBody.body.recipe,
             "persons": requestBody.body.persons,
             "creatorImage": requestBody.body.userIcon,
-            "isApproved": false
+            "creatorName": requestBody.body.userName,
+            "isApproved": false,
+            "isDiscoverable": false
         }
 
         const record:RecordModel = await pb.collection('Meals').create(data)

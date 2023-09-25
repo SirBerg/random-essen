@@ -1,3 +1,5 @@
+//TODO: Implement type checking and error handling
+
 import { getAuth } from "@clerk/nextjs/server";
 import PocketBase, {ListResult} from "pocketbase";
 import { NextRequest } from "next/server";

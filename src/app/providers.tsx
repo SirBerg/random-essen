@@ -8,11 +8,11 @@ export function Providers({
                           }: {
     children: React.ReactNode
 }) {
+
+    //TODO: Re-Add Cache Provider
     return (
-        <CacheProvider>
             <ChakraProvider>
                 {children}
             </ChakraProvider>
-        </CacheProvider>
     )
 }

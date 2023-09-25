@@ -14,7 +14,9 @@ export default authMiddleware({
 
         //endpoints that are only supposed to be authenticated (used for testing)
         "/api/manifests/units",
-        "/api/app"
+        "/api/app",
+        "/api/meal/:id",
+        "/meal/:id"
     ]
 });
 

@@ -102,32 +102,38 @@ export default function Editor(){
             alertManager('Whoops!', "Something wen't seriously wrong with the page, please consider reloading if this error persist! (Code: #00004)", 'error')
             return
         }
+        //@ts-ignore
         if(!editorField.value || !nameField.value || !healthyOptionField.value || !personsField.value || imageField.files.length === 0 || ingredients.ingredients.length === 0){
             alertManager('Missing Data', "It seems like you might've forgotten some fields! Please check if you have filled out every field and then try again (Code: #00005)", 'warning')
+            //@ts-ignore
             if(!editorField.value){
                 setInvalidateRecipe(true)
                 setTimeout(()=>{
                     setInvalidateRecipe(false)
                 }, 2000)
             }
+            //@ts-ignore
             if(!nameField.value){
                 setInvalidateName(true)
                 setTimeout(()=>{
                     setInvalidateName(false)
                 }, 2000)
             }
+            //@ts-ignore
             if(!healthyOptionField.value){
                 setInvalidateHealthyOption(true)
                 setTimeout(()=>{
                     setInvalidateHealthyOption(false)
                 }, 2000)
             }
+            //@ts-ignore
             if(!personsField.value){
                 setInvalidatePersons(true)
                 setTimeout(()=>{
                     setInvalidatePersons(false)
                 }, 2000)
             }
+            //@ts-ignore
             if(imageField.files.length === 0){
                 setInvalidateImage("red.500")
                 setTimeout(()=>{
@@ -141,6 +147,7 @@ export default function Editor(){
         }
         //perform black magic to upload file
         const formData:FormData = new FormData()
+        //@ts-ignore
         Object.values(imageField.files).forEach(file=> {
             //@ts-ignore
             formData.append('file', file)
@@ -162,16 +169,23 @@ export default function Editor(){
             requestTime: new Date(),
             manifest: false,
             body:{
+                //@ts-ignore
                 name: nameField.value.replaceAll("<", "<_"),
+                //@ts-ignore
                 image: body.filePath,
+                //@ts-ignore
                 healthyOption: healthyOptionField.value,
                 ingredients: ingredients.ingredients,
+                //@ts-ignore
                 recipe: editorField.value,
 
                 //@ts-ignore <- without this a type error occurs here because user could be undefined or null but the user has to be authenticated already to access this page(handled by the middleware)
                 userID: user.id,
                 //@ts-ignore see above comment
                 userIcon: user?.imageUrl,
+                //@ts-ignore
+                userName: user?.fullName,
+                //@ts-ignore
                 persons: parseInt(personsField.value)
             }
         }
@@ -249,7 +263,7 @@ export default function Editor(){
                     <Grid templateColumns="repeat(6, 1fr)">
                         <GridItem colSpan={1}>
                             <Center>
-                                <Button colorScheme="purple" onClick={()=>{insertAtCursor('## This is an Heading')}}>
+                                <Button colorScheme="purple" onClick={()=>{insertAtCursor('## This is a Heading')}}>
                                     Heading
                                 </Button>
                             </Center>

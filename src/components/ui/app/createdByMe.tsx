@@ -16,6 +16,8 @@ import Link from "next/link";
 export default function CreatedByMe(){
     const [tableRender, setTableRender] = useState(false)
     useEffect(() => {
+
+        //TODO: Implement Error handling
         async function wrapper():Promise<void>{
             let response =  await fetch("/api/app/user/created?page=1")
             let responseObject:apiTypes.createdByMeResponse = await response.json()
@@ -48,7 +50,6 @@ export default function CreatedByMe(){
                     </Tr>
                 )
             }))
-
         }
         wrapper()
     }, []);

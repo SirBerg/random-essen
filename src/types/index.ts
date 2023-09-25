@@ -14,7 +14,9 @@ export type meal = {
     "updated": Date,
     "creator": string,
     "creatorIcon": string,
-    "isApproved": boolean
+    "isApproved": boolean,
+    "isDiscoverable": boolean,
+    "creatorName":string
 }
 
 export type mealSummary = {
@@ -123,6 +125,7 @@ export namespace apiTypes {
             "ingredients": frontend.ingredient[]
             "recipe": markdownString,
             "userID": string,
+            "userName": string,
             "userIcon":string,
             "persons": number,
         }
@@ -134,6 +137,35 @@ export namespace apiTypes {
 
     export interface createdByMeResponse extends baseResponse {
         body:meal[]
+    }
+
+    export interface mealDetailResponseObject extends baseResponse {
+        body:{
+            meal: meal,
+            ingredients:[{
+                IngredientID: string,
+                MealID: string,
+                amount: number,
+                collectionName: string,
+                created: Date,
+                expand: {
+                    IngredientID:{
+                        collectionId: string,
+                        collectionName: "Ingredients",
+                        created: Date,
+                        creator: string,
+                        expand: {
+                            unit:unit
+                        },
+                        healthyOption: string,
+                        id: string,
+                        name: string,
+                        unit: string,
+                        updated:Date
+                    }
+                }
+            }]
+        }
     }
 }
 
