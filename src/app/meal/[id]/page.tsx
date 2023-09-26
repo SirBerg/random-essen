@@ -50,10 +50,10 @@ export function StepperDiscoverable({isDiscoverable, isApproved, orientation}:{i
         }
     ]
     let activeStepIndex:number = 0
-    if(isApproved == true){
+    if(isApproved){
         activeStepIndex = 1
     }
-    if(isDiscoverable == true){
+    if(isDiscoverable){
         activeStepIndex = 2
     }
     const { activeStep }:{activeStep:number} = useSteps({
@@ -129,7 +129,6 @@ export function UserModal({userName, userIcon, created, updated, healthyOption}:
                     <Center>
                         <Badge colorScheme={colors[healthyOption]}>{healthyOption}</Badge>
                     </Center>
-
                 </GridItem>
             </Grid>
         </Box>
@@ -229,9 +228,9 @@ export default function MealDisplay({ params }: { params: { id: string } }){
                 setIngredientTable(
                     <Tbody>
                         {
-                            mealObject.body.ingredients.map((ingredient)=>{
+                            mealObject.body.ingredients.map((ingredient, index)=>{
                                 return(
-                                    <Tr>
+                                    <Tr key={index}>
                                         <Td>{ingredient.expand.IngredientID.name}</Td>
                                         <Td>{ingredient.expand.IngredientID.expand.unit.name}</Td>
                                         <Td textAlign="right">{ingredient.amount}</Td>
@@ -297,7 +296,7 @@ export default function MealDisplay({ params }: { params: { id: string } }){
                     </TableContainer>
                 </Skeleton>
                 <Box>
-                    <Button>
+                    <Button isDisabled>
                         Share
                         <LinkIcon />
                     </Button>

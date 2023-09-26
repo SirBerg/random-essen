@@ -1,5 +1,5 @@
 'use client'
-import {Center, AbsoluteCenter, Box, Stack, Button, Grid, Checkbox, GridItem} from "@chakra-ui/react";
+import {Center, AbsoluteCenter, Box, Stack, Button, Grid, Checkbox, GridItem, useToast} from "@chakra-ui/react";
 import {
     Menu,
     MenuButton,
@@ -21,14 +21,36 @@ import RandomizationElement from "@/components/ui/app/random/RandomizationElemen
 import {IncludedIngredientsOverlay} from '@/components/ui/app/random/Overlays'
 import FilterMenu from "@/components/ui/app/random/FilterMenu";
 import {RequestOptions} from "https";
+import {apiTypes} from "@/types/index";
 
 
 export default function Handler(){
     const [overlayState, setOverlayState] = useState(<></>)
     const [height, setHeight] = useState(0)
     const [width, setWidth] = useState(0)
-
+    const [object, setObject] = useState(undefined)
     const [gridItems, setGridItems] = useState(<></>)
+    const [lock, setLock] = useState(
+        [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+        ]
+    )
+    const toast = useToast()
+    const alertManager = (title:string, message:string, status:'info' | 'warning' | "error" | "success" | "loading" | undefined) => {
+        toast({
+            title: title,
+            description: message,
+            status: status,
+            duration: 5000,
+            isClosable: true
+        })
+    }
 
     //the state of the object that is sent to the server
     const [requestObject, setRequestObject] = useState<types.apiTypes.randomizeRequest>({
@@ -39,32 +61,6 @@ export default function Handler(){
         }
     })
 
-
-    //manifests
-    const [ingredientManifest, setIngredientManifest] = useState({})
-
-    //making get requests
-    async function makeGETRequest(location:string):Promise<string>{
-        return new Promise(async (resolve:any, reject:any)=>{
-            var requestOptions:RequestInit = {
-                method: 'GET',
-                redirect: 'follow'
-            };
-
-            await fetch(location, requestOptions)
-                .then(response => response.text())
-                .then((result) => {
-                    console.log(result)
-                    resolve(result)
-                })
-                .catch((error) => {
-                    console.log('Error whilst making Fetch Request: ', error)
-                    reject(error)
-                });
-        })
-    }
-
-
     function manageSelectedFilter(filter: types.filterNames){
         setRequestObject({
             manifest: false,
@@ -73,6 +69,22 @@ export default function Handler(){
                 includedHealthyOption: filter
             }
         })
+    }
+
+    function handleCallbackLocking(index:number){
+        console.log(`Locked Index with ID: ${index}`)
+        let lockCacheArray = lock
+        lockCacheArray[index] = !lock[index]
+        setLock(lockCacheArray)
+        if(lockCacheArray[index] === true){
+
+            //@ts-ignore
+            alertManager(`Locked Meal`, `${object.body.returnArray[index].name} has been locked and will not be randomize until you unlock it again`, "info")
+        }
+        else{
+            //@ts-ignore
+            alertManager(`Unlocked Meal`, `${object.body.returnArray[index].name} has been unlocked and will be randomized again`, "info")
+        }
     }
 
 
@@ -89,13 +101,27 @@ export default function Handler(){
         if(loading){
             setGridItems(
                 <>
-                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={1} width={width} loading={loading}/>
-                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={2} width={width} loading={loading}/>
-                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={3} width={width} loading={loading}/>
-                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={4} width={width} loading={loading}/>
-                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={5} width={width} loading={loading}/>
-                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={6} width={width} loading={loading}/>
-                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={7} width={width} loading={loading}/>
+                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={1} width={width} loading={loading}
+                        callbackLock={handleCallbackLocking} index={0} currentLockStatus={lock}
+                    />
+                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={2} width={width} loading={loading}
+                        callbackLock={handleCallbackLocking} index={0} currentLockStatus={lock}
+                    />
+                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={3} width={width} loading={loading}
+                        callbackLock={handleCallbackLocking} index={0} currentLockStatus={lock}
+                    />
+                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={4} width={width} loading={loading}
+                        callbackLock={handleCallbackLocking} index={0} currentLockStatus={lock}
+                    />
+                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={5} width={width} loading={loading}
+                        callbackLock={handleCallbackLocking} index={0} currentLockStatus={lock}
+                    />
+                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={6} width={width} loading={loading}
+                         callbackLock={handleCallbackLocking} index={0} currentLockStatus={lock}
+                    />
+                    <RandomizationElement backgroundImage='Not yet defined' name='Not yet defined' uri="undefined" key={7} width={width} loading={loading}
+                         callbackLock={handleCallbackLocking} index={0} currentLockStatus={lock}
+                    />
                 </>
             )
         }
@@ -103,9 +129,9 @@ export default function Handler(){
         if(responseObject){
             setGridItems(
                 <>
-                    {responseObject.body.returnArray.map((meal:types.meal)=>{
+                    {responseObject.body.returnArray.map((meal:types.meal, index:number)=>{
                         return(
-                            <RandomizationElement backgroundImage={meal.image} name={meal.name} uri="undefined" key={meal.id} width={width} loading={loading}/>
+                            <RandomizationElement backgroundImage={meal.image} name={meal.name} uri={`/meal/${meal.id}`} key={index} width={width} loading={loading} callbackLock={handleCallbackLocking} index={index} currentLockStatus={lock}/>
                         )
                     })}
                 </>
@@ -138,18 +164,32 @@ export default function Handler(){
                 .then(response => response.text())
                 .then((result:string) => {
                     const returnObj:types.apiTypes.randomizeResponse = JSON.parse(result)
-                    console.log(returnObj)
-                    renderGridItems(false, returnObj)
+                    lock.forEach((isLocked:boolean, index:number) => {
+
+                        //sort out locked objects and re-add them to the array that will be rendered
+                        if(isLocked && object){
+                            //@ts-ignore
+                            returnObj.body.returnArray[index] = object.body.returnArray[index]
+                        }
+                    })
+
+                    //@ts-ignore
+                    setObject(returnObj)
                     resolve()
                 })
 
-                //TODO: implement way to visually indicate error to user
                 .catch((error) => {
+                    alertManager('Error', "Sorry about that! There's been an error while fetching your meals. Please report this to contact@sirberg.tokyo with the Code #00008" ,"Error")
                     console.log('Error whilst fetching!', error)
                     reject()
                 });
         })
     }
+
+    useEffect(() => {
+        renderGridItems(false, object)
+    }, [object]);
+
     function handleResize(){
         setHeight(window.innerHeight)
         setWidth(window.innerWidth)
@@ -178,17 +218,6 @@ export default function Handler(){
             {overlayState}
             <link href="/stylesheets/random.css" type="text/css" rel="stylesheet" />
             <Center width={width - 40}>
-                {
-                    /*                <Grid gap={1} className="random-grid" width={width - 40}>
-                    <RandomizationElement backgroundImage="/meals/chili-con-carne.jpg" name="Chili con Carne" uri="string" />
-                    <RandomizationElement backgroundImage="/meals/flammkuchen.jpg" name="Flammkuchen" uri="string" />
-                    <RandomizationElement backgroundImage="/meals/hot-dog.jpg" name="Hot Dog" uri="string" />
-                    <RandomizationElement backgroundImage="/meals/lasagne.jpg" name="Lasagne" uri="string" />
-                    <RandomizationElement backgroundImage="/meals/pfannkuchen.jpg" name="Pfannkuchen" uri="string" />
-                    <RandomizationElement backgroundImage="/meals/pizza.webp" name="Pizza" uri="string" />
-                    <RandomizationElement backgroundImage="/meals/spaghetti-bolognese.jpg" name="Spaghetti Bolognese" uri="string" />
-                </Grid>*/
-                }
                 <Grid gap={1} className="random-grid" width={width - 40}>
                     {gridItems}
                 </Grid>

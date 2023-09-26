@@ -38,6 +38,7 @@
     "remark-stringify": "^11.0.0",
     "typescript": "5.2.2",
     "unified": "^11.0.3",
+    "unique-names-generator": "^4.7.1",
     "vfile-reporter": "^8.1.0"
   },
   "devDependencies": {

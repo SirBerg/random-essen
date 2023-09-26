@@ -1,19 +1,20 @@
 'use client'
-import {Box, Button, Center, GridItem, Spinner, Image, Stack} from "@chakra-ui/react";
+import {Box, Button, Center, GridItem, Spinner, Image, Stack, useToast} from "@chakra-ui/react";
 import {motion, useAnimationControls} from "framer-motion";
 import {useEffect, useState} from "react";
 import {LockIcon, UnlockIcon} from '@chakra-ui/icons'
 
 
 //TODO: implement locking of meals
-export default function RandomizationElement({backgroundImage, name, uri, width, loading, toggleLock, index}: {backgroundImage:string, name: string, uri: string, width:number, loading:boolean, toggleLock:Function, index:number}){
+export default function RandomizationElement({backgroundImage, name, uri, width, loading, callbackLock, index, currentLockStatus}: {backgroundImage:string, name: string, uri: string, width:number, loading:boolean, callbackLock:Function, index:number, currentLockStatus:boolean[]}){
     const [containerBackgroundImageOpacity, setContainerBackgroundImageOpacity] = useState(0)
     const [scaleFactor, setScaleFactor] = useState(1)
     const [isDarkmode, setIsDarkmode] = useState('gray.200')
     const [showLockIcon, setShowLockIcon] = useState(<></>)
     const [hovering, setHovering] = useState(false)
-    const [locked, setLocked] = useState(false)
     const controls = useAnimationControls()
+
+    const toast = useToast()
 
     function controlComponentScale(){
         setHovering(true)
@@ -26,45 +27,33 @@ export default function RandomizationElement({backgroundImage, name, uri, width,
     }
 
     function handleToggleClick(){
-        //toggleLock(index, !locked)
-        if(locked === true){
-            setLocked(false)
-            handleToggleHover(false)
-        }
-        else{
-            setLocked(true)
-            handleToggleHover(true)
-        }
 
     }
 
     //handles rendering of the lock icon
-    function handleToggleHover(lockedOverride?:boolean){
-        console.log('HOVER TOGGLE UPDATE')
+    function handleToggleHover(){
         if(hovering === true){
-            if(lockedOverride === true || locked){
+            if(currentLockStatus[index] === true){
                 setShowLockIcon(
-                    <Box as={motion.div}
-                         initial={{opacity: 0, y: 25}}
-                         animate={{opacity: 1, y: 0}}
+                    <Box
+                        as={motion.div}
+                        initial={{opacity:0, y:-25}}
+                        animate={{opacity:1, y:0}}
                     >
-                        <Button
-                            onClick={handleToggleClick}
-                        >
+                        <Button onClick={()=>callbackLock(index)}>
                             <LockIcon />
                         </Button>
                     </Box>
                 )
             }
-            else if(lockedOverride === false || locked === false){
+            else{
                 setShowLockIcon(
-                    <Box as={motion.div}
-                         initial={{opacity: 0, y: 25}}
-                         animate={{opacity: 1, y: 0}}
+                    <Box
+                        as={motion.div}
+                        initial={{opacity:0, y:-25}}
+                        animate={{opacity:1, y:0}}
                     >
-                        <Button
-                            onClick={handleToggleClick}
-                        >
+                        <Button onClick={()=>callbackLock(index)}>
                             <UnlockIcon />
                         </Button>
                     </Box>
@@ -74,6 +63,7 @@ export default function RandomizationElement({backgroundImage, name, uri, width,
         else{
             setShowLockIcon(<></>)
         }
+
     }
 
     //listens to hovering to render the lock icon
@@ -81,8 +71,12 @@ export default function RandomizationElement({backgroundImage, name, uri, width,
         handleToggleHover()
     }, [hovering]);
 
+    //listening to update of lock
     useEffect(() => {
+        handleToggleHover()
+    }, [currentLockStatus[index]]);
 
+    useEffect(() => {
         //setting init state
         //if it matches that means we are in darkmode
         if(window.matchMedia('(prefers-color-scheme:dark)').matches) {
@@ -139,7 +133,7 @@ export default function RandomizationElement({backgroundImage, name, uri, width,
                                 <Center>
                                     {showLockIcon}
                                 </Center>
-                                <Button as={motion.div}>
+                                <Button as="a" href={uri}>
                                     {name}
                                 </Button>
                             </Stack>

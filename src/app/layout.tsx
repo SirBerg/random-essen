@@ -25,7 +25,9 @@ export default function RootLayout({
             <link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" />
           </head>
           <body className="body">
-              <ClerkProvider>
+              <ClerkProvider
+                publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+              >
                   <link rel="stylesheet" type="text/css" href="/stylesheets/globals.css" />
                   <Providers>
                       <Header />

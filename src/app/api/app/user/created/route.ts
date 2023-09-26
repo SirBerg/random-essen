@@ -16,9 +16,15 @@ export async function GET(request:NextRequest){
 
         let page:number = 1
         if(request.nextUrl.searchParams.get('page') && request.nextUrl.searchParams.get('page')){
-            console.log(request.nextUrl.searchParams.get('page'))
+            //@ts-ignore
             page = parseInt(request.nextUrl.searchParams.get('page'))
+
+            if(page && page < 1){
+                page = 1
+            }
         }
+
+        //@ts-ignore
         let filter = `creator = '${userId.toString()}'`
         const resultList:ListResult<meal> = await pb.collection('Meals').getList(page, 50, {
             filter: filter

@@ -29,18 +29,18 @@ return (
         <Box className="app-sidebar">
             <Grid templateColumns="repeat(9, 1fr)" gap={4}>
                 <GridItem colSpan={3}>
-                    <Button variant="solid" id="Editor" color="purple" width="100%" bgColor={isDarkmode} onClick={(e)=>callbackFunction(e)}>
+                    <Button variant="solid" id="Editor" width="100%" onClick={(e)=>callbackFunction(e)}>
                         Editor
                     </Button>
                 </GridItem>
                 <GridItem colSpan={3}>
-                    <Button variant="ghost" id="List" color="purple" width="100%" bgColor={isDarkmode} onClick={(e)=>callbackFunction(e)}>
-                        Created by me
+                    <Button variant="solid" id="List" width="100%" onClick={(e)=>callbackFunction(e)}>
+                        My Meals
                     </Button>
                 </GridItem>
                 <GridItem colSpan={3}>
-                    <Button variant="ghost" id="Recommended" color="purple" width="100%" bgColor={isDarkmode} onClick={(e)=>callbackFunction(e)}>
-                        Recommended
+                    <Button variant="solid" isDisabled id="Recommended" width="100%" onClick={(e)=>callbackFunction(e)}>
+                        Coming Soon
                     </Button>
                 </GridItem>
             </Grid>

@@ -195,17 +195,17 @@ export async function POST(request:Request){
             "creator": requestBody.body.userID,
             "recipe": requestBody.body.recipe,
             "persons": requestBody.body.persons,
-            "creatorImage": requestBody.body.userIcon,
+            "creatorIcon": requestBody.body.userIcon,
             "creatorName": requestBody.body.userName,
             "isApproved": false,
             "isDiscoverable": false
         }
-
         const record:RecordModel = await pb.collection('Meals').create(data)
         console.log('[API][APP][route.ts] Created Meal with id', record.id)
         createdMeal = record.id
     }
     catch(e){
+        console.log(e)
         console.log('[ERROR][APP][route.ts] Error whilst creating Meal:', e)
         const responseObject:apiTypes.baseResponse = {
             isError: true,

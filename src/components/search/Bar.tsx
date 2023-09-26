@@ -42,7 +42,7 @@ export default function SearchBar(){
                 <InputLeftElement pointerEvents='none'>
                     <SearchIcon color="black" />
                 </InputLeftElement>
-                <Input isDisabled placeholder='Search for a meal' style={{caretColor:"blue"}} onInput={(e)=>handleInput(e)} color="black" maxWidth="280px"/>
+                <Input placeholder='Search for a meal' style={{caretColor:"blue"}} onInput={(e)=>handleInput(e)} color="black" maxWidth="280px"/>
             </InputGroup>
             {searchResult}
         </div>

@@ -24,16 +24,20 @@ code {
     border-radius: 5px;
 }
 
-a {
+a:not(.headerLink) {
     color: #0332eb;
     text-decoration: #000d8a underline 2px;
 }
 
-a:visited{
+a:visited:not(.headerLink){
     color: #f89b29;
     text-decoration: #f89b29;
 }
 
 img{
     border-radius: 5px;
+}
+
+.headerLink{
+    color:green;
 }

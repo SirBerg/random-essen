@@ -164,6 +164,7 @@ export default function Editor(){
             //If this was indeed an error then we should not continue
             return
         }
+
         //upload the rest of the meal
         const uploadObject:mealCreationRequest = {
             requestTime: new Date(),
@@ -184,7 +185,7 @@ export default function Editor(){
                 //@ts-ignore see above comment
                 userIcon: user?.imageUrl,
                 //@ts-ignore
-                userName: user?.fullName,
+                userName: user?.fullName ? user.fullName : user.id,
                 //@ts-ignore
                 persons: parseInt(personsField.value)
             }
@@ -230,7 +231,7 @@ export default function Editor(){
                     <GridItem>
                         <Stack direction="column">
                             <h4>Image</h4>
-                            <Center bgColor={invalidateImage} p="3" borderRadius="5px">
+                            <Center bgColor={invalidateImage} p="3" borderRadius="5px" overflowX="hidden" maxWidth="200px">
                                 <input id="image-field" type="file" accept=".jpg, .png, jpeg, .webp, .svg"/>
                             </Center>
                         </Stack>
@@ -298,7 +299,7 @@ export default function Editor(){
                         </GridItem>
                         <GridItem>
                             <Center>
-                            <Button colorScheme="purple" onClick={()=>{insertAtCursor('![alternative text](https://the.image.you.want.invalid)')}}>
+                            <Button isDisabled colorScheme="purple" onClick={()=>{insertAtCursor('![alternative text](https://the.image.you.want.invalid)')}}>
                                 🖼️
                             </Button>
                             </Center>
