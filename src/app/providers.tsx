@@ -11,8 +11,10 @@ export function Providers({
 
     //TODO: Re-Add Cache Provider
     return (
+        <CacheProvider>
             <ChakraProvider>
                 {children}
             </ChakraProvider>
+        </CacheProvider>
     )
 }

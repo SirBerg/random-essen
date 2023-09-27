@@ -41,6 +41,7 @@ export default function Handler(){
             false
         ]
     )
+    const [currentSelected, setCurrentState] = useState('all')
     const toast = useToast()
     const alertManager = (title:string, message:string, status:'info' | 'warning' | "error" | "success" | "loading" | undefined) => {
         toast({
@@ -57,25 +58,14 @@ export default function Handler(){
         manifest: false,
         requestTime: new Date(),
         filter:{
-            includedHealthyOption: "all",
+            includedHealthyOption: 'all',
         }
     })
-
-    function manageSelectedFilter(filter: types.filterNames){
-        setRequestObject({
-            manifest: false,
-            requestTime: new Date(),
-            filter: {
-                includedHealthyOption: filter
-            }
-        })
-    }
 
     function handleCallbackLocking(index:number){
         console.log(`Locked Index with ID: ${index}`)
         let lockCacheArray = lock
         lockCacheArray[index] = !lock[index]
-        console.log(lock)
         setLock(lockCacheArray)
         if(lockCacheArray[index] === true){
 
@@ -194,6 +184,11 @@ export default function Handler(){
         renderGridItems(false, object)
     }, [object]);
 
+    useEffect(() => {
+        console.log('Updated Request Object')
+        console.log(requestObject)
+    }, [requestObject]);
+
     function handleResize(){
         setHeight(window.innerHeight)
         setWidth(window.innerWidth)
@@ -217,16 +212,72 @@ export default function Handler(){
         })
     }, []);
 
+
+    //filter menu logic
+    const [veganButtonColorScheme, setVeganButtonColorScheme] = useState("ghost")
+    const [allButtonColorScheme, setAllButtonColorScheme] = useState('solid')
+    const [vegetarianButtonColorScheme, setVegetarianButtonColorScheme] = useState('ghost')
+    const [activeIDVegan, setActiveIDVegan] = useState('inactive')
+    const [activeIDAll, stActiveIDAll] = useState('active')
+    const [activeIDVegetarian, setActiveIDVegatarian] = useState('inactive')
+
+    const handleClick = (button:string) => {
+
+        if(button === "vegan"){
+            setVeganButtonColorScheme('solid')
+            setAllButtonColorScheme('ghost')
+            setVegetarianButtonColorScheme('ghost')
+        }
+        else if(button === "all"){
+            setVeganButtonColorScheme('ghost')
+            setAllButtonColorScheme('solid')
+            setVegetarianButtonColorScheme('ghost')
+        }
+        else if(button === "vegetarian"){
+            setVeganButtonColorScheme('ghost')
+            setAllButtonColorScheme('ghost')
+            setVegetarianButtonColorScheme('solid')
+        }
+        else{
+            return
+        }
+        setCurrentState(button)
+    }
+
+    /*
+    * Stupid workaround to get the filter working
+    * fuck this shit
+    * */
+    useEffect(() => {
+        let cacheObject = requestObject
+        cacheObject.filter.includedHealthyOption = currentSelected
+        setRequestObject(cacheObject)
+    }, [currentSelected]);
+
     return(
         <Box>
-            {overlayState}
             <link href="/stylesheets/random.css" type="text/css" rel="stylesheet" />
             <Center width={width - 40}>
                 <Grid gap={1} className="random-grid" width={width - 40}>
                     {gridItems}
                 </Grid>
             </Center>
-            <FilterMenu updateCallback={manageSelectedFilter} generateCallback={reloadGridItems} width={width} height={height}/>
+            <Center className="filter-container" width={width} height={90} position="relative">
+                <Stack direction="row">
+                    <Button onClick={()=>{reloadGridItems()}}>
+                        Generate!
+                    </Button>
+                    <Button variant={veganButtonColorScheme} color="white" colorScheme="green" id={activeIDVegan} onClick={()=>handleClick('vegan')}>
+                        Vegan
+                    </Button>
+                    <Button variant={allButtonColorScheme} color="white" colorScheme="green" id={activeIDVegan} onClick={()=>handleClick('all')}>
+                        All
+                    </Button>
+                    <Button variant={vegetarianButtonColorScheme} color="white" colorScheme="green" id={activeIDVegan} onClick={()=>handleClick('vegetarian')}>
+                        Vegetarian
+                    </Button>
+                </Stack>
+            </Center>
         </Box>
     )
 }

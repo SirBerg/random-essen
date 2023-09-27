@@ -18,7 +18,6 @@ export async function POST(request: Request){
         'vegan' : 'isApproved = true && isDiscoverable = true && healthyOption = "vegan" || healthyOption = "all"'
     }
 
-
     //parsing and validating request body
     let requestBody:types.apiTypes.randomizeRequest
     try{
@@ -66,6 +65,8 @@ export async function POST(request: Request){
     }
 
     const pb = new PocketBase(process.env.POCKETBASE_HOST)
+
+    console.log('[INFO][API][RANDOMIZE][route.ts] Using Healthy Option: ', requestBody.filter.includedHealthyOption)
 
     //@ts-ignore
     const authData = await pb.admins.authWithPassword(process.env.POCKETBASE_USERNAME, process.env.POCKETBASE_PASSWORD)
