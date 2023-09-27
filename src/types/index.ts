@@ -16,7 +16,8 @@ export type meal = {
     "creatorIcon": string,
     "isApproved": boolean,
     "isDiscoverable": boolean,
-    "creatorName":string
+    "creatorName":string,
+    "persons": number
 }
 
 export type mealSummary = {

@@ -26,7 +26,7 @@ export default function Editor(){
     const toast = useToast()
     const {isLoaded, isSignedIn, user} = useUser()
     const [fieldValue, setFieldValue] = useState("")
-
+    const [recipeIsSubmitted, setRecipeIsSubmitted] = useState(false)
     const [invalidateName, setInvalidateName] = useState(false)
     const [invalidateImage, setInvalidateImage] = useState("gray.600")
     const [invalidateHealthyOption, setInvalidateHealthyOption] = useState(false)
@@ -84,6 +84,7 @@ export default function Editor(){
 
     const handleSubmit = async (e:any) => {
         e.preventDefault()
+        setRecipeIsSubmitted(true)
 
         //@ts-ignore
         const editorField:HTMLElement | HTMLInputElement = document.getElementById('editor-field')
@@ -104,6 +105,7 @@ export default function Editor(){
         }
         //@ts-ignore
         if(!editorField.value || !nameField.value || !healthyOptionField.value || !personsField.value || imageField.files.length === 0 || ingredients.ingredients.length === 0){
+            setRecipeIsSubmitted(false)
             alertManager('Missing Data', "It seems like you might've forgotten some fields! Please check if you have filled out every field and then try again (Code: #00005)", 'warning')
             //@ts-ignore
             if(!editorField.value){
@@ -160,6 +162,7 @@ export default function Editor(){
 
         const body:apiTypes.uploadResponse | apiTypes.baseResponse = await response.json() as apiTypes.uploadResponse | apiTypes.baseResponse;
         if(body.isError === true){
+            setRecipeIsSubmitted(false)
             alertManager('File Upload Error!', "Sorry, but we're having trouble uploading your Image :( . Maybe try another one or try again later. \n If you are really cool then you could report this to contact@sirberg.tokyo with the code #00003", 'error')
             //If this was indeed an error then we should not continue
             return
@@ -201,11 +204,13 @@ export default function Editor(){
         //this should not occur as the fields will be checked before sending the body (this is just to give user feedback in case of weird edgecases)
         if(mealCreationBody.isError === true || mealCreationResponse.status === 415){
             alertManager("Some Fields are Missing!", "It seems like the Server didn't quite understand that. Are there maybe some fields you have missed?", "error")
+            setRecipeIsSubmitted(false)
             return
         }
 
         //give user feedback in case of success
         if(mealCreationBody.isError === false || mealCreationResponse.status === 201){
+            setRecipeIsSubmitted(false)
             alertManager("Created!", "Your Meal has been created! You may now view it in the 'Meals created by me' Tab!", 'success')
             return
         }
@@ -316,7 +321,7 @@ export default function Editor(){
                           isInvalid={invalidateRecipe}
                 />
                 <Box fontSize="10px" color="gray.500" marginTop="-2">Basic Markdown Syntax is supported</Box>
-                <Center><Button colorScheme="green" onClick={(e:any)=>handleSubmit(e)}>Create</Button></Center>
+                <Center><Button isLoading = {recipeIsSubmitted} colorScheme="green" onClick={(e:any)=>handleSubmit(e)}>Create</Button></Center>
                 <h3>Recipe Preview</h3>
                 <Box dangerouslySetInnerHTML={{__html: renderedPreview}} />
             </Stack>

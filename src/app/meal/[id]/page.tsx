@@ -2,7 +2,20 @@
 import {useEffect, useState} from "react";
 import {redirect} from "next/navigation";
 import {apiTypes, filterNames} from "@/types";
-import {Box, Stack, useToast, Image, Spinner, Center, Skeleton, Grid, GridItem, Badge, Button} from "@chakra-ui/react";
+import {
+    Box,
+    Stack,
+    useToast,
+    Image,
+    Spinner,
+    Center,
+    Skeleton,
+    Grid,
+    GridItem,
+    Badge,
+    Button,
+    Input, InputLeftAddon
+} from "@chakra-ui/react";
 import {motion, useScroll} from "framer-motion";
 import {useUser} from "@clerk/nextjs";
 import {unified} from "unified";
@@ -33,6 +46,15 @@ import {
     Stepper,
     useSteps,
 } from '@chakra-ui/react'
+import {InputGroup} from "@chakra-ui/input";
+import {
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
+} from '@chakra-ui/react'
+
 
 export function StepperDiscoverable({isDiscoverable, isApproved, orientation}:{isDiscoverable:boolean, isApproved:boolean, orientation: "vertical" | "horizontal"}){
     let steps = [
@@ -157,6 +179,66 @@ export default function MealDisplay({ params }: { params: { id: string } }){
     const [userIsLoaded, setUserIsLoaded] = useState(false)
     const [mealTitle, setMealTitle] = useState(<></>)
     const [ingredientTable, setIngredientTable] = useState(<></>)
+    const [returnObj, setReturnObj] = useState()
+    const [persons, setPersons] = useState(0)
+
+    function handleIngredientTableRender(){
+        console.log(returnObj)
+        if(!returnObj) return
+        //create ingredient table
+        setIngredientTable(
+            <Tbody>
+                {
+                    //@ts-ignore
+                    returnObj.body.ingredients.map((ingredient, index)=>{
+                        return(
+                            <Tr key={index}>
+                                <Td>{ingredient.expand.IngredientID.name}</Td>
+                                <Td>{ingredient.amount}</Td>
+                                <Td>{ingredient.expand.IngredientID.expand.unit.name}</Td>
+                            </Tr>
+                        )
+                    })
+                }
+            </Tbody>
+        )
+    }
+
+    const handleShareButtonClick = () =>{
+        alertManager('Copied to clipboard', 'The URL has been copied to your clipboard', 'success')
+        navigator.clipboard.writeText(`https://meal.miko.sh/meal/${returnObj.body.meal.id}`);
+    }
+
+    const handleClick = ()=>{
+
+        const inputField:any = document.getElementById('number-input')
+        console.log(inputField.value)
+        if(!inputField.value){
+            console.log('none!')
+            return
+        }
+
+        let cachedObj:apiTypes.mealDetailResponseObject = returnObj
+
+        returnObj.body.ingredients.forEach((ingredient:ingredient, index:number)=>{
+            cachedObj.body.ingredients[index].amount = returnObj.body.ingredients[index].amount / returnObj.body.meal.persons
+
+            cachedObj.body.ingredients[index].amount = cachedObj.body.ingredients[index].amount * inputField.value
+            console.log(cachedObj.body.ingredients[index].amount)
+        })
+        cachedObj.body.meal.persons = inputField.value
+        console.log(cachedObj)
+        setPersons(inputField.value)
+        setReturnObj(cachedObj)
+        console.log(cachedObj)
+        handleIngredientTableRender()
+    }
+
+    //handles re-render of table object
+    useEffect(() => {
+        console.log('Updated Return Obj')
+        handleIngredientTableRender()
+    }, [returnObj]);
 
     useEffect(() => {
 
@@ -164,6 +246,7 @@ export default function MealDisplay({ params }: { params: { id: string } }){
             //this should not happen but just in case we will redirect to /404
             redirect("/404")
         }
+
 
 
         //fetch meal data from API
@@ -174,7 +257,6 @@ export default function MealDisplay({ params }: { params: { id: string } }){
                 if(!mealObject || mealObject.isError){
                     alertManager("Error!", "Sorry but there has been an issue retrieving the Data for the meal, please reload the page or report this at contact@sirberg.tokyo with code #00007", "error")
                 }
-                console.log(mealObject)
                 setImageURL(mealObject.body.meal.image)
                 const parseMarkdown = async (content:string):Promise<string> => {
                     return new Promise(async (resolve, reject)=>{
@@ -224,22 +306,8 @@ export default function MealDisplay({ params }: { params: { id: string } }){
                                              healthyOption={mealObject.body.meal.healthyOption}
                 />)
                 setUserIsLoaded(true)
-                //create ingredient table
-                setIngredientTable(
-                    <Tbody>
-                        {
-                            mealObject.body.ingredients.map((ingredient, index)=>{
-                                return(
-                                    <Tr key={index}>
-                                        <Td>{ingredient.expand.IngredientID.name}</Td>
-                                        <Td>{ingredient.expand.IngredientID.expand.unit.name}</Td>
-                                        <Td textAlign="right">{ingredient.amount}</Td>
-                                    </Tr>
-                                )
-                            })
-                        }
-                    </Tbody>
-                )
+                setPersons(mealObject.body.meal.persons)
+                setReturnObj(mealObject)
             }
             catch(e){
                 console.log(e)
@@ -272,6 +340,8 @@ export default function MealDisplay({ params }: { params: { id: string } }){
                     {userModalState}
                 </Skeleton>
                 <Box marginTop="20px" />
+                <h3>Ingredients</h3>
+                <Box>Ingredients for {persons} Persons</Box>
                 <Skeleton isLoaded = {userIsLoaded}>
                     <TableContainer>
                         <Table variant='simple'>
@@ -279,8 +349,8 @@ export default function MealDisplay({ params }: { params: { id: string } }){
                             <Thead>
                                 <Tr>
                                     <Th>Name</Th>
+                                    <Th>Amount</Th>
                                     <Th>Unit</Th>
-                                    <Th isNumeric>Amount</Th>
                                 </Tr>
                             </Thead>
 
@@ -288,19 +358,41 @@ export default function MealDisplay({ params }: { params: { id: string } }){
                             <Tfoot>
                                 <Tr>
                                     <Th>Name</Th>
-                                    <Th>Unit</Th>
-                                    <Th isNumeric>Amount</Th>
+                                    <Th>Amount</Th>
+                                    <Th >Unit</Th>
                                 </Tr>
                             </Tfoot>
                         </Table>
                     </TableContainer>
                 </Skeleton>
-                <Box>
-                    <Button isDisabled>
-                        Share
-                        <LinkIcon />
-                    </Button>
-                </Box>
+                <Grid templateColumns="repeat(3, 1fr)">
+                    <GridItem>
+                        <Stack>
+                            <Button onClick={handleShareButtonClick}>
+                                Share
+                                <LinkIcon />
+                            </Button>
+                        </Stack>
+                    </GridItem>
+                    <GridItem />
+                    <GridItem>
+                        <Stack direction="row" gap={1}>
+                            <Box bgColor="white" color="black" p={2} borderRadius="5">Persons</Box>
+                            <Center>
+                                <NumberInput>
+                                    <NumberInputField id="number-input" />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                            </Center>
+                            <Center>
+                                <Button onClick={handleClick}>Calc</Button>
+                            </Center>
+                        </Stack>
+                    </GridItem>
+                </Grid>
                 <Box marginTop="30px" />
                 <Skeleton h="40px" isLoaded={recipeIsLoaded} >
                     <Box dangerouslySetInnerHTML={{__html: recipeState}}/>

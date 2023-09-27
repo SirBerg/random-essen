@@ -40,7 +40,7 @@ export default function RandomizationElement({backgroundImage, name, uri, width,
                         initial={{opacity:0, y:-25}}
                         animate={{opacity:1, y:0}}
                     >
-                        <Button onClick={()=>callbackLock(index)}>
+                        <Button onClick={()=>callbackLock(index)} colorScheme="red">
                             <LockIcon />
                         </Button>
                     </Box>
@@ -53,7 +53,7 @@ export default function RandomizationElement({backgroundImage, name, uri, width,
                         initial={{opacity:0, y:-25}}
                         animate={{opacity:1, y:0}}
                     >
-                        <Button onClick={()=>callbackLock(index)}>
+                        <Button onClick={()=>callbackLock(index)} colorScheme="green">
                             <UnlockIcon />
                         </Button>
                     </Box>
@@ -103,11 +103,22 @@ export default function RandomizationElement({backgroundImage, name, uri, width,
             {
                 //if loading is set to true, we do this
                 loading ? (
-                    <Center className="meal-container">
-                        <Spinner />
-                    </Center>
+                    <Box
+                        as={motion.div}
+                        initial={{opacity:0, y: -50}}
+                        animate={{opacity:1, y: 0}}
+                    >
+                        <Center className="meal-container">
+                            <Spinner />
+                        </Center>
+                    </Box>
+
                 ):(
-                    <div>
+                    <Box
+                        as={motion.div}
+                        initial={{opacity:0, y: -50}}
+                        animate={{opacity:1, y: 0}}
+                    >
                         <Image
                             as={motion.img}
                             src={backgroundImage}
@@ -138,7 +149,7 @@ export default function RandomizationElement({backgroundImage, name, uri, width,
                                 </Button>
                             </Stack>
                         </Center>
-                    </div>
+                    </Box>
                 )
             }
         </GridItem>
