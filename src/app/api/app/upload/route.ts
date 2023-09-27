@@ -35,7 +35,7 @@ export async function POST(request:Request){
 
             //generate hex and then create directory
             id = randomHex(32)
-            const path = join('',`public/meals/${id}`)
+            const path = join('',`public/meal/${id}`)
             mkdir(path, (err:any)=>{
                 if(err){
 

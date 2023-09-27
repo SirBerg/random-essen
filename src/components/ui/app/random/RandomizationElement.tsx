@@ -26,10 +26,6 @@ export default function RandomizationElement({backgroundImage, name, uri, width,
         controls.start({scale: 1, borderRadius:"5px"})
     }
 
-    function handleToggleClick(){
-
-    }
-
     //handles rendering of the lock icon
     function handleToggleHover(){
         if(hovering === true){

@@ -75,6 +75,7 @@ export default function Handler(){
         console.log(`Locked Index with ID: ${index}`)
         let lockCacheArray = lock
         lockCacheArray[index] = !lock[index]
+        console.log(lock)
         setLock(lockCacheArray)
         if(lockCacheArray[index] === true){
 
@@ -97,7 +98,6 @@ export default function Handler(){
     * */
     function renderGridItems(loading:boolean, responseObject?:types.apiTypes.randomizeResponse){
         setWidth(window.innerWidth)
-
         if(loading){
             setGridItems(
                 <>
@@ -130,8 +130,11 @@ export default function Handler(){
             setGridItems(
                 <>
                     {responseObject.body.returnArray.map((meal:types.meal, index:number)=>{
+                        let fileName = meal.image.split('/').pop()
+                        //yeah that was dumb
+                        let basePath = meal.image.replaceAll(fileName, '').slice(0, -1).replace('meals', '').replace('meal', '').replaceAll('/','')
                         return(
-                            <RandomizationElement backgroundImage={meal.image} name={meal.name} uri={`/meal/${meal.id}`} key={index} width={width} loading={loading} callbackLock={handleCallbackLocking} index={index} currentLockStatus={lock}/>
+                            <RandomizationElement backgroundImage={`/meal/img/${basePath}?fileName=${fileName}`} name={meal.name} uri={`/meal/${meal.id}`} key={index} width={width} loading={loading} callbackLock={handleCallbackLocking} index={index} currentLockStatus={lock}/>
                         )
                     })}
                 </>
@@ -167,7 +170,8 @@ export default function Handler(){
                     lock.forEach((isLocked:boolean, index:number) => {
 
                         //sort out locked objects and re-add them to the array that will be rendered
-                        if(isLocked && object){
+                        if(isLocked == true && object){
+                            console.log(`[Locked] Detected locked object at Index ${index}`)
                             //@ts-ignore
                             returnObj.body.returnArray[index] = object.body.returnArray[index]
                         }
