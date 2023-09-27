@@ -216,10 +216,6 @@ export default function Editor(){
         }
     }
 
-    useEffect(() => {
-
-    }, []);
-
     return (
         <Box className="editor-container">
             <link rel="stylesheet" type="text/css" href="/stylesheets/markdown.css" />

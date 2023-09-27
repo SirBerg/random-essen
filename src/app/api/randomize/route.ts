@@ -13,7 +13,7 @@ export async function POST(request: Request){
         //this means everything will be included (meat, vegetarian, vegan)
         'all': 'isApproved = true && isDiscoverable = true',
         'meat': 'isApproved = true && isDiscoverable = true',
-        //it's "all" because some things like pizza or pancakes can be done vegetarian or vegan style, "all" refers to these meals
+        //it's "all" because some things like pizza or pancakes can be done vegetarian or vegan style, "all" refers to these meal
         'vegetarian': 'isApproved = true && isDiscoverable = true && healthyOption = "vegetarian" || healthyOption = "all" || healthyOption = "vegan"',
         'vegan' : 'isApproved = true && isDiscoverable = true && healthyOption = "vegan" || healthyOption = "all"'
     }

@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import {LockIcon, UnlockIcon} from '@chakra-ui/icons'
 
 
-//TODO: implement locking of meals
+//TODO: implement locking of meal
 export default function RandomizationElement({backgroundImage, name, uri, width, loading, callbackLock, index, currentLockStatus}: {backgroundImage:string, name: string, uri: string, width:number, loading:boolean, callbackLock:Function, index:number, currentLockStatus:boolean[]}){
     const [containerBackgroundImageOpacity, setContainerBackgroundImageOpacity] = useState(0)
     const [scaleFactor, setScaleFactor] = useState(1)

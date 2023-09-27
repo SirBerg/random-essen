@@ -56,7 +56,7 @@ export async function POST(request:Request){
         const extension:string | undefined = file.name.split('.').pop()
 
         //generate the path of the file
-        const path = join('',`public/meals/${id}/${generatedRandomFileName}.${extension}`)
+        const path = join('',`public/meal/${id}/${generatedRandomFileName}.${extension}`)
 
         //write to disk
         await writeFile(path, buffer)

@@ -141,7 +141,7 @@ export default function Handler(){
     }
 
     /*
-    * Requests a new set of meals from the API and then calls the renderGridItems function to update the display
+    * Requests a new set of meal from the API and then calls the renderGridItems function to update the display
     * @returns void
     * */
     async function reloadGridItems(){
@@ -179,7 +179,7 @@ export default function Handler(){
                 })
 
                 .catch((error) => {
-                    alertManager('Error', "Sorry about that! There's been an error while fetching your meals. Please report this to contact@sirberg.tokyo with the Code #00008" ,"Error")
+                    alertManager('Error', "Sorry about that! There's been an error while fetching your meal. Please report this to contact@sirberg.tokyo with the Code #00008" ,"Error")
                     console.log('Error whilst fetching!', error)
                     reject()
                 });

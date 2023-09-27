@@ -12,7 +12,8 @@ export default authMiddleware({
         "/api/randomize",
         "/meal/:id",
         "/api/meal/:id",
-        "/meal/:id"
+        "/meal/:id",
+        "/meal/img/:path"
     ]
 });
 

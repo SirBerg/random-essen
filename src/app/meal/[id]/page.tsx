@@ -212,7 +212,6 @@ export default function MealDisplay({ params }: { params: { id: string } }){
     const handleClick = ()=>{
 
         const inputField:any = document.getElementById('number-input')
-        console.log(inputField.value)
         if(!inputField.value){
             console.log('none!')
             return
@@ -224,19 +223,15 @@ export default function MealDisplay({ params }: { params: { id: string } }){
             cachedObj.body.ingredients[index].amount = returnObj.body.ingredients[index].amount / returnObj.body.meal.persons
 
             cachedObj.body.ingredients[index].amount = cachedObj.body.ingredients[index].amount * inputField.value
-            console.log(cachedObj.body.ingredients[index].amount)
         })
         cachedObj.body.meal.persons = inputField.value
-        console.log(cachedObj)
         setPersons(inputField.value)
         setReturnObj(cachedObj)
-        console.log(cachedObj)
         handleIngredientTableRender()
     }
 
     //handles re-render of table object
     useEffect(() => {
-        console.log('Updated Return Obj')
         handleIngredientTableRender()
     }, [returnObj]);
 
@@ -257,7 +252,12 @@ export default function MealDisplay({ params }: { params: { id: string } }){
                 if(!mealObject || mealObject.isError){
                     alertManager("Error!", "Sorry but there has been an issue retrieving the Data for the meal, please reload the page or report this at contact@sirberg.tokyo with code #00007", "error")
                 }
-                setImageURL(mealObject.body.meal.image)
+
+                let fileName = mealObject.body.meal.image.split('/').pop()
+
+                //yeah that was dumb
+                let basePath = mealObject.body.meal.image.replaceAll(fileName, '').slice(0, -1).replace('meals', '').replace('meal', '').replaceAll('/','')
+                setImageURL(`/meal/img/${basePath}?fileName=${fileName}`)
                 const parseMarkdown = async (content:string):Promise<string> => {
                     return new Promise(async (resolve, reject)=>{
                         unified()
